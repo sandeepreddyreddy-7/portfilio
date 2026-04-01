@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Github, Linkedin, MapPin, ChevronDown } from "lucide-react";
+import { ArrowRight, MapPin, ChevronDown } from "lucide-react";
+import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
 
 const codeSnippet = `// AskTPSRM · SmartGate · CatTrap
 async function buildAtScale(problem: string) {
@@ -19,13 +20,22 @@ async function buildAtScale(problem: string) {
   });
 }`;
 
-const words = ["Automation", "Cloud Systems", "APIs at Scale", "Secure Platforms"];
+const words = ["Generative AI Systems", "Security Engineering", "Enterprise Cloud Architecture", "Multi-Agent AI", "DevSecOps Pipelines", "GRC Automation"];
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [wordIndex, setWordIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   // Typewriter effect
   useEffect(() => {
@@ -48,10 +58,10 @@ export default function Hero() {
     return () => clearTimeout(timeout);
   }, [displayed, isDeleting, wordIndex]);
 
-  // ── 3-D perspective particle engine ─────────────────────────────────────────
-  // Mouse-local particle swarm
-  // 240 particles across full hero; cursor repels nearby ones
+  // ── Particle engine ──────────────────────────────────────────────────────────
+  // 240 filled dots with idle drift, cursor repulsion, spring back, connection lines
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true }) as CanvasRenderingContext2D;
@@ -73,27 +83,26 @@ export default function Hero() {
     ];
 
     interface Pt {
-      ox: number; oy: number;   // resting origin
-      x: number;  y: number;   // current position
+      ox: number; oy: number;
+      x: number;  y: number;
       vx: number; vy: number;
       size: number; alpha: number; ci: number;
     }
 
-    const COUNT        = 240;
-    const INFLUENCE_R  = 130;   // cursor reach
-    const REPEL        = 4.5;   // push strength
-    const SPRING       = 0.035; // spring back to origin
-    const FRICTION     = 0.86;  // velocity damping
-    const IDLE_SPEED   = 0.12;  // max idle drift speed
-    const CONNECT_R    = 80;    // screen distance to draw a line
+    const COUNT       = W < 768 ? 80 : 240;
+    const INFLUENCE_R = 130;
+    const REPEL       = 4.5;
+    const SPRING      = 0.035;
+    const FRICTION    = 0.86;
+    const IDLE_SPEED  = 0.12;
+    const CONNECT_R   = 80;
 
-    let mx = -9999, my = -9999; // off-screen until first move
+    let mx = -9999, my = -9999;
     const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
     const onOut  = () => { mx = -9999; my = -9999; };
     window.addEventListener('mousemove', onMove, { passive: true });
-    window.addEventListener('mouseleave', onOut);
+    window.addEventListener('mouseleave', onOut, { passive: true });
 
-    // Spawn with random resting position across the full section
     const mkPt = (): Pt => {
       const ox = Math.random() * W;
       const oy = Math.random() * H;
@@ -113,7 +122,6 @@ export default function Hero() {
       ctx.clearRect(0, 0, W, H);
 
       for (const p of pts) {
-        // Cursor repulsion
         const dx = p.x - mx, dy = p.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < INFLUENCE_R && dist > 0) {
@@ -121,12 +129,8 @@ export default function Hero() {
           p.vx += (dx / dist) * force;
           p.vy += (dy / dist) * force;
         }
-
-        // Spring back toward origin
         p.vx += (p.ox - p.x) * SPRING;
         p.vy += (p.oy - p.y) * SPRING;
-
-        // Friction + move
         p.vx *= FRICTION; p.vy *= FRICTION;
         p.x  += p.vx;     p.y  += p.vy;
       }
@@ -175,7 +179,7 @@ export default function Hero() {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onOut);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   const scrollToAbout = () => {
     document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
@@ -184,7 +188,7 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* 3-D canvas — mouse parallax passes through */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" aria-hidden="true" />
 
       {/* Grid background */}
       <div className="absolute inset-0 grid-bg opacity-60" />
@@ -206,7 +210,7 @@ export default function Hero() {
             >
               <span className="w-2 h-2 rounded-full bg-[#14B8A6] shadow-[0_0_8px_#14B8A6] animate-pulse" />
               <MapPin size={12} className="text-[#14B8A6]" />
-              Durham, NC · Open to Opportunities
+              Durham, NC · Open to Senior Engineering, Staff, and Technical Lead roles · Remote-friendly
             </motion.div>
 
             {/* Headline */}
@@ -216,6 +220,8 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="text-[clamp(36px,5.5vw,72px)] font-extrabold leading-[1.05] tracking-tight mb-6"
             >
+              <span className="text-[clamp(28px,4vw,40px)] text-[#F1F5F9] block mb-2">Sandeep Reddy Reddy</span>
+              <span className="text-[clamp(16px,2vw,22px)] text-[#94A3B8] block mb-8 font-medium">Senior Software Engineer <span className="text-[#1E2A45] px-2">|</span> AI / Security / GRC <span className="text-[#1E2A45] px-2">|</span> Full Stack & Cloud Engineering</span>
               Engineering
               <br />
               <span className="gradient-text">{displayed}</span>
@@ -265,33 +271,35 @@ export default function Hero() {
               className="flex items-center gap-6"
             >
               <a
-                href="https://github.com"
+                href="https://github.com/sandeepreddyreddy-7"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#475569] hover:text-[#F1F5F9] transition-colors"
                 aria-label="GitHub"
               >
-                <Github size={20} />
+                <GitHubSVG size={20} />
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/sandeepreddy170"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#475569] hover:text-[#3B82F6] transition-colors"
                 aria-label="LinkedIn"
               >
-                <Linkedin size={20} />
+                <LinkedInSVG size={20} />
               </a>
               <div className="h-4 w-px bg-[#1E2A45]" />
-              <div className="flex gap-6">
+              <div className="flex flex-wrap gap-x-6 gap-y-4">
                 {[
-                  { value: "8+", label: "Years" },
-                  { value: "2", label: "Patents" },
-                  { value: "IBM", label: "Current" },
+                  { value: "8+", label: "Years @ IBM" },
+                  { value: "2×", label: "Patent Inventor" },
+                  { value: "6+", label: "Services Led" },
+                  { value: "94%", label: "AI Accuracy" },
+                  { value: "4×", label: "Release Cadence" },
                 ].map((s) => (
                   <div key={s.label} className="text-center">
                     <div className="text-[15px] font-bold gradient-text">{s.value}</div>
-                    <div className="text-[11px] text-[#475569] font-medium uppercase tracking-wider">{s.label}</div>
+                    <div className="text-[10px] text-[#475569] font-medium uppercase tracking-wider">{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -347,9 +355,9 @@ export default function Hero() {
                 <div className="px-5 py-3 border-t border-[#1E2A45]/60 bg-[#0F1424]/60 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-[#14B8A6] animate-pulse" />
-                    <span className="text-xs text-[#475569] font-mono">TypeScript · Ready</span>
+                    <span className="text-xs text-[#64748B] font-mono">TypeScript · Ready</span>
                   </div>
-                  <div className="flex gap-3 text-xs text-[#475569] font-mono">
+                  <div className="flex gap-3 text-xs text-[#64748B] font-mono">
                     <span>IBM Hybrid Cloud</span>
                     <span>·</span>
                     <span>OpenShift</span>
@@ -359,20 +367,20 @@ export default function Hero() {
 
               {/* Floating badges */}
               <motion.div
-                animate={{ y: [0, -6, 0] }}
+                animate={prefersReducedMotion ? {} : { y: [0, -6, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -top-4 -right-4 glass rounded-xl px-4 py-3 shadow-lg"
               >
-                <div className="text-xs text-[#475569] font-medium mb-1">Patents Filed</div>
+                <div className="text-xs text-[#64748B] font-medium mb-1">Patents Filed</div>
                 <div className="text-lg font-bold gradient-text">2×</div>
               </motion.div>
 
               <motion.div
-                animate={{ y: [0, 6, 0] }}
+                animate={prefersReducedMotion ? {} : { y: [0, 6, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
                 className="absolute -bottom-4 -left-4 glass rounded-xl px-4 py-3 shadow-lg"
               >
-                <div className="text-xs text-[#475569] font-medium mb-1">Experience</div>
+                <div className="text-xs text-[#64748B] font-medium mb-1">Experience</div>
                 <div className="text-lg font-bold gradient-text-teal">8+ yrs</div>
               </motion.div>
             </div>
@@ -390,7 +398,7 @@ export default function Hero() {
       >
         <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
         <motion.div
-          animate={{ y: [0, 5, 0] }}
+          animate={prefersReducedMotion ? {} : { y: [0, 5, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
           <ChevronDown size={16} />

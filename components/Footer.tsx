@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Github, Linkedin, Mail, ArrowUp } from "lucide-react";
+import { Code2, Mail, ArrowUp } from "lucide-react";
+import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
+
+const socials = [
+  { Icon: () => <GitHubSVG size={15} />, href: "https://github.com/sandeepreddyreddy-7", label: "GitHub" },
+  { Icon: () => <LinkedInSVG size={15} />, href: "https://www.linkedin.com/in/sandeepreddy170", label: "LinkedIn" },
+  { Icon: () => <Mail size={15} />, href: "mailto:asandeepreddy170@gmail.com", label: "Email" },
+];
 
 export default function Footer() {
   const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -17,17 +24,13 @@ export default function Footer() {
             </div>
             <div>
               <div className="text-[14px] font-bold text-[#F1F5F9]">Sandeep Reddy Reddy</div>
-              <div className="text-[12px] text-[#475569]">Senior Software Engineer · Durham, NC</div>
+              <div className="text-[12px] text-[#64748B]">Senior Software Engineer · Durham, NC</div>
             </div>
           </div>
 
           {/* Socials */}
           <div className="flex items-center gap-3">
-            {[
-              { icon: Github, href: "https://github.com", label: "GitHub" },
-              { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-              { icon: Mail, href: "mailto:sandeepreddy@email.com", label: "Email" },
-            ].map((s) => (
+            {socials.map((s) => (
               <a
                 key={s.label}
                 href={s.href}
@@ -36,7 +39,7 @@ export default function Footer() {
                 aria-label={s.label}
                 className="w-9 h-9 rounded-lg bg-[#1E2A45]/40 border border-[#1E2A45]/60 flex items-center justify-center text-[#475569] hover:text-[#F1F5F9] hover:border-[#3B82F6]/40 transition-all duration-200"
               >
-                <s.icon size={15} />
+                <s.Icon />
               </a>
             ))}
           </div>
@@ -53,7 +56,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="mt-8 pt-6 border-t border-[#1E2A45]/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-[#475569]">
+        <div className="mt-8 pt-6 border-t border-[#1E2A45]/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-[#64748B]">
           <span>© 2025 Sandeep Reddy Reddy. All rights reserved.</span>
           <span>Built with Next.js · Tailwind CSS · Framer Motion</span>
         </div>
