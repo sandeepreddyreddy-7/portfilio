@@ -2,10 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Code2, Mail, ArrowUp } from "lucide-react";
-import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
+import { LinkedInSVG } from "@/components/Icons";
 
 const socials = [
-  { Icon: () => <GitHubSVG size={15} />, href: "https://github.com/sandeepreddyreddy-7", label: "GitHub" },
   { Icon: () => <LinkedInSVG size={15} />, href: "https://www.linkedin.com/in/sandeepreddy170", label: "LinkedIn" },
   { Icon: () => <Mail size={15} />, href: "mailto:sandeep@sandeepreddy.dev", label: "Email" },
 ];

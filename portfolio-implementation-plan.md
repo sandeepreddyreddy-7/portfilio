@@ -121,49 +121,7 @@ Recommended: **Separate pages** for VerifAI and SupplierIQ (your two strongest),
 
 ---
 
-## Phase 3 — GitHub Presence (This Week, Parallel to Phase 2)
 
-Your portfolio links to GitHub prominently in 3 places. If a hiring manager clicks through and sees nothing, it actively works against you.
-
-**You do not need to open-source proprietary IBM code.**
-
-### What to Do Instead
-
-- [ ] **VerifAI** — Create repo `verifai` with:
-  - Detailed README: problem statement, architecture diagram (even ASCII), tech stack, key design decisions
-  - A sanitized/pseudocode version of the core dual-LLM validation loop
-  - Reference to the patent filing
-
-- [ ] **SmartGate** — Create repo `smartgate` with:
-  - README explaining the DevSecOps pipeline architecture
-  - Sample GitHub Actions / Jenkins pipeline config (generic, not IBM-specific)
-  - SBOM scanning setup example
-
-- [ ] **Portfolio site itself** — Make the repo public if it isn't already:
-  - Good README
-  - This doubles as a coding signal (Next.js, Tailwind, Framer Motion)
-
-- [ ] **Pin 3–4 repos** on your GitHub profile page — currently unpinned repos look abandoned
-
----
-
-## Phase 4 — Personal Projects (3–4 Weeks)
-
-Adds range. Shows you build outside of work. Critical signal for startups and high-growth companies.
-
-### Add to Portfolio Projects Section
-
-**Fotryx or JobRadar** (whichever is more polished):
-- Frame it as a personal project, not a product
-- Focus on technical decisions, not features
-- Even a simple "I built X to solve Y problem I had personally" is enough
-
-**This portfolio site itself:**
-- List it as a project with the tech stack (Next.js, Tailwind, Framer Motion, Vercel)
-- Brief description: "Designed and built my personal portfolio from scratch to showcase enterprise-scale projects in a clean, recruiter-friendly format"
-- This is legitimate — building a polished portfolio is a real technical deliverable
-
----
 
 ## Phase 5 — SEO & Discoverability (Ongoing, Low Effort)
 
@@ -209,11 +167,9 @@ The hardest to add but the most trust-building.
 |---|---|---|---|
 | Phase 0 — Critical Fixes | Low | Critical | Today |
 | Phase 1 — Content Strengthening | Low | High | This week |
-| Phase 3 — GitHub Presence | Medium | High | This week |
 | Phase 2 — Case Studies | High | Very High | 2 weeks |
-| Phase 4 — Personal Projects | Medium | Medium | 3–4 weeks |
-| Phase 5 — SEO | Low | Medium | Ongoing |
-| Phase 6 — Social Proof | High | High | 4–6 weeks |
+| Phase 3 — SEO | Low | Medium | Ongoing |
+| Phase 4 — Social Proof | High | High | 4–6 weeks |
 
 ---
 

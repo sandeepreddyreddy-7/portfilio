@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, Send, MapPin, CheckCircle } from "lucide-react";
-import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
+import { LinkedInSVG } from "@/components/Icons";
 
 const socials = [
   {
@@ -23,15 +23,6 @@ const socials = [
     color: "#0A66C2",
     bg: "rgba(10,102,194,0.1)",
     border: "rgba(10,102,194,0.2)",
-  },
-  {
-    Icon: ({ color }: { color: string }) => <GitHubSVG size={16} color={color} />,
-    label: "GitHub",
-    value: "github.com/sandeepreddyreddy-7",
-    href: "https://github.com/sandeepreddyreddy-7",
-    color: "#94A3B8",
-    bg: "rgba(148,163,184,0.1)",
-    border: "rgba(148,163,184,0.15)",
   },
 ];
 

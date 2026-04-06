@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, ChevronDown } from "lucide-react";
-import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
+import { LinkedInSVG } from "@/components/Icons";
 
 const codeSnippet = `// AskTPSRM · SmartGate · CatTrap
 async function buildAtScale(problem: string) {
@@ -270,15 +270,6 @@ export default function Hero() {
               transition={{ delay: 0.8, duration: 0.7 }}
               className="flex items-center gap-6"
             >
-              <a
-                href="https://github.com/sandeepreddyreddy-7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#475569] hover:text-[#F1F5F9] transition-colors"
-                aria-label="GitHub"
-              >
-                <GitHubSVG size={20} />
-              </a>
               <a
                 href="https://www.linkedin.com/in/sandeepreddy170"
                 target="_blank"
