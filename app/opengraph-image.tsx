@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 
 // Standard OpenGraph sizing
-export const alt = 'Sandeep Reddy Reddy - Senior Software Engineer';
+export const alt = 'Sandeep Reddy - Senior Software Engineer';
 export const size = {
   width: 1200,
   height: 630,
@@ -39,7 +39,7 @@ export default async function Image() {
               color: '#F1F5F9'
             }}
           >
-            Sandeep Reddy Reddy
+            Sandeep Reddy
           </h1>
           <p
             style={{

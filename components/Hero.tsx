@@ -210,7 +210,7 @@ export default function Hero() {
             >
               <span className="w-2 h-2 rounded-full bg-[#14B8A6] shadow-[0_0_8px_#14B8A6] animate-pulse" />
               <MapPin size={12} className="text-[#14B8A6]" />
-              Durham, NC · Open to Senior Engineering, Staff, and Technical Lead roles · Remote-friendly
+              Durham, NC | Open to Senior Engineering, Staff, and Technical Lead roles
             </motion.div>
 
             {/* Headline */}
@@ -220,7 +220,7 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="text-[clamp(36px,5.5vw,72px)] font-extrabold leading-[1.05] tracking-tight mb-6"
             >
-              <span className="text-[clamp(28px,4vw,40px)] text-[#F1F5F9] block mb-2">Sandeep Reddy Reddy</span>
+              <span className="text-[clamp(28px,4vw,40px)] text-[#F1F5F9] block mb-2">Sandeep Reddy</span>
               <span className="text-[clamp(16px,2vw,22px)] text-[#94A3B8] block mb-8 font-medium">Senior Software Engineer <span className="text-[#1E2A45] px-2">|</span> AI / Security / GRC <span className="text-[#1E2A45] px-2">|</span> Full Stack & Cloud Engineering</span>
               Engineering
               <br />
@@ -292,8 +292,8 @@ export default function Hero() {
               <div className="flex flex-wrap gap-x-6 gap-y-4">
                 {[
                   { value: "8+", label: "Years @ IBM" },
-                  { value: "2×", label: "Patent Inventor" },
-                  { value: "6+", label: "Services Led" },
+                  { value: "2×", label: "IBM Patents Filed" },
+                  { value: "10+", label: "Distributed Services" },
                   { value: "94%", label: "AI Accuracy" },
                   { value: "4×", label: "Release Cadence" },
                 ].map((s) => (

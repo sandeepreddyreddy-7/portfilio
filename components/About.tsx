@@ -9,7 +9,11 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const paragraphs = aboutData?.paragraphs || [];
+  const paragraphs = [
+    "I'm a Senior Software Engineer and 2× Patent Inventor with 8+ years building production-grade systems at IBM — specializing in Generative AI, distributed platforms, and enterprise security automation. I've shipped high-impact systems end-to-end from architecture through production, at enterprise scale.",
+    "I approach every system as if I'll be the one on-call at 3am when it breaks — which means I design for observability, security, and failure from day one. At IBM's Third-Party Security Risk Management organization, I've led the design and delivery of systems that directly changed how security works at scale. I architected multi-agent LLM frameworks on watsonx Orchestrate achieving 94% validation accuracy. I engineered DevSecOps pipelines that took release cadence from monthly to weekly. I built the conversational AI assistant — powered by Python and FastAPI — that reduced security triage response time from hours to 10 seconds. My work spans the full stack — React and Next.js frontends, Python microservices and APIs, IBM Cloud infrastructure, and GRC platform administration.",
+    "I'm looking for my next role at a company where engineering depth matters — Senior Engineer, Staff Engineer, Solutions Architect, or Technical Lead — particularly in cloud, security, or AI-native organizations where I can own systems at the same level of complexity and impact.",
+  ];
   const valueCards = aboutData?.valueCards || [];
 
   const getIcon = (name?: string) => {
@@ -38,7 +42,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
               </div>
               <h2 className="section-header mb-8">
                 I Build Systems That{" "}
-                <span className="gradient-text">Others Depend On</span>
+                <span className="gradient-text">Help Teams Move Faster</span>
               </h2>
             </motion.div>
 

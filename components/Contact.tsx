@@ -9,8 +9,8 @@ const socials = [
   {
     Icon: ({ color }: { color: string }) => <Mail size={16} style={{ color }} />,
     label: "Email",
-    value: "asandeepreddy170@gmail.com",
-    href: "mailto:asandeepreddy170@gmail.com",
+    value: "sandeep@sandeepreddy.dev",
+    href: "mailto:sandeep@sandeepreddy.dev",
     color: "#3B82F6",
     bg: "rgba(59,130,246,0.1)",
     border: "rgba(59,130,246,0.2)",

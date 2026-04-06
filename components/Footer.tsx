@@ -7,7 +7,7 @@ import { GitHubSVG, LinkedInSVG } from "@/components/Icons";
 const socials = [
   { Icon: () => <GitHubSVG size={15} />, href: "https://github.com/sandeepreddyreddy-7", label: "GitHub" },
   { Icon: () => <LinkedInSVG size={15} />, href: "https://www.linkedin.com/in/sandeepreddy170", label: "LinkedIn" },
-  { Icon: () => <Mail size={15} />, href: "mailto:asandeepreddy170@gmail.com", label: "Email" },
+  { Icon: () => <Mail size={15} />, href: "mailto:sandeep@sandeepreddy.dev", label: "Email" },
 ];
 
 export default function Footer() {
@@ -23,7 +23,7 @@ export default function Footer() {
               <Code2 size={15} className="text-white" />
             </div>
             <div>
-              <div className="text-[14px] font-bold text-[#F1F5F9]">Sandeep Reddy Reddy</div>
+              <div className="text-[14px] font-bold text-[#F1F5F9]">Sandeep Reddy</div>
               <div className="text-[12px] text-[#64748B]">Senior Software Engineer · Durham, NC</div>
             </div>
           </div>
@@ -57,7 +57,7 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="mt-8 pt-6 border-t border-[#1E2A45]/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-[#64748B]">
-          <span>© 2025 Sandeep Reddy Reddy. All rights reserved.</span>
+          <span>© 2026 Sandeep Reddy. All rights reserved.</span>
           <span>Built with Next.js · Tailwind CSS · Framer Motion</span>
         </div>
       </div>

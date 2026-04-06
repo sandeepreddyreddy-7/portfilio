@@ -3,9 +3,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sandeepreddy.dev"),
-  title: "Sandeep Reddy Reddy — Senior Software Engineer",
+  title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
   description:
-    "Senior Full Stack Software Engineer with 8+ years building enterprise-grade platforms, automation systems, and cloud-native applications at IBM. 2× Patent Inventor.",
+    "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
   keywords: [
     "Sandeep Reddy",
     "Senior Software Engineer",
@@ -20,11 +20,11 @@ export const metadata: Metadata = {
     "OpenShift",
     "DevOps",
   ],
-  authors: [{ name: "Sandeep Reddy Reddy" }],
+  authors: [{ name: "Sandeep Reddy" }],
   openGraph: {
-    title: "Sandeep Reddy Reddy — Senior Software Engineer",
+    title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
     description:
-      "Building enterprise-grade platforms and automation systems that power real-world operations.",
+      "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
     type: "website",
     locale: "en_US",
     url: "https://sandeepreddy.dev",
@@ -33,15 +33,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Sandeep Reddy Reddy - Senior Software Engineer",
+        alt: "Sandeep Reddy - Senior Software Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sandeep Reddy Reddy — Senior Software Engineer",
+    title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
     description:
-      "Building enterprise-grade platforms and automation systems that power real-world operations.",
+      "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
     images: ["/opengraph-image"],
   },
 };
@@ -49,12 +49,12 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Sandeep Reddy Reddy",
+  name: "Sandeep Reddy",
   url: "https://sandeepreddy.dev",
   jobTitle: "Senior Software Engineer",
   description:
     "Senior Full Stack Software Engineer with 8+ years building enterprise-grade platforms, automation systems, and cloud-native applications at IBM. 2× Patent Inventor.",
-  email: "asandeepreddy170@gmail.com",
+  email: "sandeep@sandeepreddy.dev",
   sameAs: [
     "https://github.com/sandeepreddyreddy-7",
     "https://www.linkedin.com/in/sandeepreddy170",

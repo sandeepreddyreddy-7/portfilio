@@ -292,9 +292,9 @@ const aboutDoc = {
   _id: 'site-about',
   title: 'About Content singleton',
   paragraphs: [
-    "I'm a Senior Software Engineer with 8+ years building production-grade systems at IBM — specializing in Generative AI, distributed platforms, and enterprise security automation. I'm a 2× Patent Inventor and Technical Lead who has shipped high-impact systems end-to-end from design through production, serving IBM's global workforce at enterprise scale.",
-    "At IBM's Third-Party Security Risk Management organization, I've architected multi-agent LLM frameworks using watsonx Orchestrate and watsonx.ai, built conversational AI assistants deployed on Slack and web, designed dual-LLM validation engines achieving 94% AI accuracy, and engineered DevSecOps pipelines that increased release cadence 4× while reducing deployment time from hours to minutes. My work spans the full stack — from React and Next.js frontends to Spring Boot microservices, IBM Cloud infrastructure, and GRC platform administration.",
-    "I'm actively exploring Senior Software Engineer, Staff Engineer, Solutions Architect, and Technical Lead roles — particularly in cloud, security, and AI-native organizations where I can bring this same depth of engineering and platform thinking to the next team."
+    "I'm a Senior Software Engineer and 2x Patent Inventor with 8+ years building production-grade systems at IBM - specializing in Generative AI, distributed platforms, and enterprise security automation. I've shipped high-impact systems end-to-end from architecture through production, at enterprise scale.",
+    "At IBM's Third-Party Security Risk Management organization, I've led the design and delivery of systems that directly changed how security works at scale. I architected multi-agent LLM frameworks on watsonx Orchestrate achieving 94% validation accuracy. I engineered DevSecOps pipelines that took release cadence from monthly to weekly. I built the conversational AI assistant - powered by Python and FastAPI - that reduced security triage response time from hours to 10 seconds. My work spans the full stack - React and Next.js frontends, Python microservices and APIs, IBM Cloud infrastructure, and GRC platform administration.",
+    "I'm looking for my next role at a company where engineering depth matters - Senior Engineer, Staff Engineer, Solutions Architect, or Technical Lead - particularly in cloud, security, or AI-native organizations where I can own systems at the same level of complexity and impact."
   ],
   valueCards: [
     {

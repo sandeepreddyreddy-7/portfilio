@@ -75,6 +75,11 @@ export const project = defineType({
       title: 'Display Order',
       type: 'number',
     }),
+    defineField({
+      name: 'caseStudy',
+      title: 'Full Case Study (for dedicated pages)',
+      type: 'text',
+    }),
   ],
   preview: {
     select: {

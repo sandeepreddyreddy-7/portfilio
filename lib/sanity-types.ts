@@ -22,6 +22,7 @@ export interface Project extends SanityDocument {
   accentColor?: string;
   url?: string;
   order?: number;
+  caseStudy?: string;
 }
 
 export interface Experience extends SanityDocument {
