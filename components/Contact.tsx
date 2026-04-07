@@ -124,7 +124,7 @@ export default function Contact() {
       setSubmitted(true);
       setFormState({ name: "", email: "", message: "" });
       setFieldErrors({});
-    } catch (err) {
+    } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 
 interface AnimatedCounterProps {
   value: string;
@@ -16,6 +16,12 @@ export default function AnimatedCounter({
   const [displayValue, setDisplayValue] = useState("0");
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
+
+  const { numericValue, suffix } = useMemo(() => {
+    const num = parseInt(value.replace(/\D/g, ""), 10);
+    const suf = value.replace(/\d/g, "");
+    return { numericValue: num, suffix: suf };
+  }, [value]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,16 +44,12 @@ export default function AnimatedCounter({
   useEffect(() => {
     if (!isVisible) return;
 
-    // Extract numeric value from string (e.g., "8+" -> 8)
-    const numericValue = parseInt(value.replace(/\D/g, ""), 10);
-    const suffix = value.replace(/\d/g, ""); // Get non-numeric characters
-
+    // If value is not numeric, display as-is
     if (!numericValue || isNaN(numericValue)) {
       setDisplayValue(value);
       return;
     }
 
-    let start = 0;
     const startTime = Date.now();
 
     const animate = () => {
@@ -69,7 +71,7 @@ export default function AnimatedCounter({
     };
 
     requestAnimationFrame(animate);
-  }, [isVisible, value, duration, onComplete]);
+  }, [isVisible, value, duration, onComplete, numericValue, suffix]);
 
   return <div ref={elementRef}>{displayValue}</div>;
 }

@@ -10,11 +10,13 @@ export default function Skills({ skillsData }: { skillsData: Skill[] }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [expandedMobile, setExpandedMobile] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !window.matchMedia('(min-width: 768px)').matches;
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
-    setIsMobile(!mediaQuery.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);

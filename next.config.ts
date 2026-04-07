@@ -2,8 +2,6 @@ import type { NextConfig } from "next";
 import path from "path";
 import { withSentryConfig } from "@sentry/nextjs";
 
-const isDev = process.env.NODE_ENV === "development";
-
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 

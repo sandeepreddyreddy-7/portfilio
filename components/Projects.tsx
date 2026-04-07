@@ -20,7 +20,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [expanded, setExpanded] = useState(false);
-  const Icon = getCategoryIcon(project.category);
+
+  const renderCategoryIcon = () => {
+    const Icon = getCategoryIcon(project.category);
+    return <Icon size={18} style={{ color: project.accentColor }} />;
+  };
 
   return (
     <motion.div
@@ -41,7 +45,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="w-10 h-10 rounded-xl flex items-center justify-center border"
               style={{ background: `${project.accentColor}10`, borderColor: `${project.accentColor}30` }}
             >
-              <Icon size={18} style={{ color: project.accentColor }} />
+              {renderCategoryIcon()}
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: project.accentColor }}>
