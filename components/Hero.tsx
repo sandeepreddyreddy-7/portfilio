@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, MapPin, ChevronDown } from "lucide-react";
 import { LinkedInSVG } from "@/components/Icons";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 const codeSnippet = `// AskTPSRM · SmartGate · CatTrap
 async function buildAtScale(problem: string) {
@@ -29,7 +30,7 @@ export default function Hero() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mq.matches);
     const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
@@ -186,9 +187,9 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
       {/* 3-D canvas — mouse parallax passes through */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" aria-hidden="true" />
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" aria-hidden="true" suppressHydrationWarning />
 
       {/* Grid background */}
       <div className="absolute inset-0 grid-bg opacity-60" />
@@ -197,10 +198,10 @@ export default function Hero() {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-gradient-radial from-[#1E2A4A]/60 to-transparent blur-3xl pointer-events-none" />
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full bg-gradient-radial from-[#8B5CF6]/10 to-transparent blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Text */}
-          <div>
+          <div className="flex flex-col pt-16">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -218,16 +219,16 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.7 }}
-              className="text-[clamp(36px,5.5vw,72px)] font-extrabold leading-[1.05] tracking-tight mb-6"
+              className="text-[clamp(36px,5.5vw,72px)] font-extrabold leading-[1.15] tracking-tight mb-6 flex-shrink-0"
             >
               <span className="text-[clamp(28px,4vw,40px)] text-[#F1F5F9] block mb-2">Sandeep Reddy</span>
               <span className="text-[clamp(16px,2vw,22px)] text-[#94A3B8] block mb-8 font-medium">Senior Software Engineer <span className="text-[#1E2A45] px-2">|</span> AI / Security / GRC <span className="text-[#1E2A45] px-2">|</span> Full Stack & Cloud Engineering</span>
-              Engineering
-              <br />
-              <span className="gradient-text">{displayed}</span>
-              <span className="cursor-blink gradient-text">|</span>
-              <br />
-              <span className="text-[#F1F5F9]">That Ships at</span>{" "}
+              <span className="text-[#F1F5F9]">Engineering</span>
+              <div className="min-h-[1.2em] overflow-hidden">
+                <span className="gradient-text">{displayed}</span>
+                <span className="cursor-blink gradient-text">|</span>
+              </div>
+              <span className="text-[#F1F5F9]">That Ship at</span>{" "}
               <span className="gradient-text">Enterprise Scale</span>
             </motion.h1>
 
@@ -289,7 +290,9 @@ export default function Hero() {
                   { value: "4×", label: "Release Cadence" },
                 ].map((s) => (
                   <div key={s.label} className="text-center">
-                    <div className="text-[15px] font-bold gradient-text">{s.value}</div>
+                    <div className="text-[15px] font-bold gradient-text">
+                      <AnimatedCounter value={s.value} duration={2000} />
+                    </div>
                     <div className="text-[10px] text-[#475569] font-medium uppercase tracking-wider">{s.label}</div>
                   </div>
                 ))}
