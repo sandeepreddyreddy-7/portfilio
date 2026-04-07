@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Briefcase, GraduationCap } from "lucide-react";
+import { useNonce } from "@/app/nonce-context";
 import type { Experience as ExperienceItem } from "@/lib/sanity-types";
 
 // Default colors by type if accentColor is not set
@@ -12,6 +13,7 @@ const getExperienceColor = (item: { accentColor?: string; type: string }): strin
 };
 
 export default function Experience({ experienceData }: { experienceData: ExperienceItem[] }) {
+  const nonce = useNonce();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -66,14 +68,16 @@ export default function Experience({ experienceData }: { experienceData: Experie
                       className={`absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center border-2 z-10 exp-dot ${item.isCurrent ? 'current' : ''}`}
                       style={{ '--item-color': itemColor } as React.CSSProperties}
                       suppressHydrationWarning
+                      nonce={nonce}
                     >
-                      <Icon size={16} className="exp-dot-icon" style={{ '--item-color': itemColor } as React.CSSProperties} />
+                      <Icon size={16} className="exp-dot-icon" style={{ '--item-color': itemColor } as React.CSSProperties} nonce={nonce} />
                     </div>
 
                     {/* Card */}
                     <div
                       className="glass rounded-2xl p-6 border transition-all duration-300 hover:border-opacity-50 exp-card"
                       style={{ '--item-color': itemColor } as React.CSSProperties}
+                      nonce={nonce}
                     >
                       {/* Header */}
                       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
@@ -84,13 +88,14 @@ export default function Experience({ experienceData }: { experienceData: Experie
                               <span
                                 className="text-[10px] font-bold px-2 py-0.5 rounded-full exp-badge"
                                 style={{ '--item-color': itemColor } as React.CSSProperties}
+                                nonce={nonce}
                               >
                                 Current
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[14px] font-semibold exp-company" style={{ '--item-color': itemColor } as React.CSSProperties}>
+                            <span className="text-[14px] font-semibold exp-company" style={{ '--item-color': itemColor } as React.CSSProperties} nonce={nonce}>
                               {item.company}
                             </span>
                             <span className="text-[#475569] text-xs">·</span>
@@ -109,6 +114,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
                             <span
                               className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0 exp-highlight-dot"
                               style={{ '--item-color': itemColor } as React.CSSProperties}
+                              nonce={nonce}
                             />
                             {h}
                           </li>

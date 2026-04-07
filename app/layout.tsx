@@ -85,6 +85,7 @@ const jsonLd = {
 
 import ScrollUX from "@/components/ScrollUX";
 import Script from "next/script";
+import { NonceProvider } from "./nonce-context";
 
 export default async function RootLayout({
   children,
@@ -118,8 +119,10 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <ScrollUX />
-        {children}
+        <NonceProvider nonce={nonce}>
+          <ScrollUX />
+          {children}
+        </NonceProvider>
       </body>
     </html>
   );

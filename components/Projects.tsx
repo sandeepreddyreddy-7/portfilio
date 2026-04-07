@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ChevronDown, ChevronUp, Zap, Shield, Bot, Folder } from "lucide-react";
+import { useNonce } from "@/app/nonce-context";
 import type { Project } from "@/lib/sanity-types";
 
 // Mapping Sanity category strings back to their semantic UI icons
@@ -30,6 +31,7 @@ const getProjectColor = (project: { accentColor?: string; category: string }): s
 const categories = ["All", "Generative AI", "Enterprise Automation", "Security / DevSecOps"];
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const nonce = useNonce();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [expanded, setExpanded] = useState(false);
@@ -64,23 +66,26 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         className="p-6 pb-0 bg-opacity-10 project-bg-gradient"
         style={{ '--project-color': projectColor } as React.CSSProperties}
         suppressHydrationWarning
+        nonce={nonce}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center border project-icon-box"
               style={{ '--project-color': projectColor } as React.CSSProperties}
+              nonce={nonce}
             >
               {renderBadge()}
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wider project-category" style={{ '--project-color': projectColor } as React.CSSProperties}>
+              <div className="text-xs font-semibold uppercase tracking-wider project-category" style={{ '--project-color': projectColor } as React.CSSProperties} nonce={nonce}>
                 {project.category}
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span
                   className="text-[10px] font-semibold px-2 py-0.5 rounded-full project-status"
                   style={{ '--project-color': projectColor } as React.CSSProperties}
+                  nonce={nonce}
                 >
                   {project.status}
                 </span>
@@ -122,7 +127,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <ul className="space-y-1.5">
               {project.impact?.slice(0, 2).map((item: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} nonce={nonce} />
                   {item}
                 </li>
               ))}
@@ -140,6 +145,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           }}
           className="flex items-center gap-2 text-[12px] font-semibold transition-colors hover:opacity-80 rounded px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 project-btn"
           style={{ '--project-color': projectColor } as React.CSSProperties}
+          nonce={nonce}
           aria-expanded={expanded}
           aria-controls={`case-study-${index}`}
         >
@@ -170,7 +176,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <ul className="space-y-1.5">
                   {project.architecture?.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} nonce={nonce} />
                       {item}
                     </li>
                   ))}
@@ -182,7 +188,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <ul className="space-y-1.5">
                   {project.impact?.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} nonce={nonce} />
                       {item}
                     </li>
                   ))}

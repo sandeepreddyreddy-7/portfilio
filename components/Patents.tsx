@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Award, FileText, CheckCircle2 } from "lucide-react";
+import { useNonce } from "@/app/nonce-context";
 import type { Patent } from "@/lib/sanity-types";
 
 // Default color for patents if accent is not set
@@ -11,6 +12,7 @@ const getPatentColor = (patent: { accent?: string }): string => {
 };
 
 export default function Patents({ patentsData }: { patentsData: Patent[] }) {
+  const nonce = useNonce();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const patents = patentsData || [];
@@ -52,11 +54,13 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
               className="glass rounded-2xl p-8 border hover:border-opacity-100 transition-all duration-300 relative overflow-hidden group"
               style={{ '--patent-color': patentColor } as React.CSSProperties}
               suppressHydrationWarning
+              nonce={nonce}
             >
               {/* Background gradient */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 patent-bg-gradient"
                 style={{ '--patent-color': patentColor } as React.CSSProperties}
+                nonce={nonce}
               />
 
               <div className="relative z-10">
@@ -64,8 +68,9 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center border patent-icon-box"
                     style={{ '--patent-color': patentColor } as React.CSSProperties}
+                    nonce={nonce}
                   >
-                    <Award size={24} className="patent-icon" style={{ '--patent-color': patentColor } as React.CSSProperties} />
+                    <Award size={24} className="patent-icon" style={{ '--patent-color': patentColor } as React.CSSProperties} nonce={nonce} />
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-[11px] font-bold tracking-wider uppercase text-[#F1F5F9] px-3 py-1 bg-[#1E2A45] rounded-full flex items-center gap-1.5 border border-[#3B82F6]/30">
