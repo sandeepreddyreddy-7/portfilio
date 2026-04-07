@@ -14,16 +14,42 @@ const getCategoryIcon = (category: string) => {
   return Folder;
 };
 
+// Default colors by category if accentColor is not set
+const getCategoryColor = (category: string): string => {
+  if (category.includes('AI')) return '#A78BFA'; // Purple
+  if (category.includes('Automation')) return '#F97316'; // Orange
+  if (category.includes('Security')) return '#06B6D4'; // Cyan
+  return '#3B82F6'; // Default blue
+};
+
+// Helper to get the effective color (from project or category default)
+const getProjectColor = (project: { accentColor?: string; category: string }): string => {
+  return project.accentColor || getCategoryColor(project.category);
+};
+
 const categories = ["All", "Generative AI", "Enterprise Automation", "Security / DevSecOps"];
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [expanded, setExpanded] = useState(false);
+  const projectColor = getProjectColor(project);
 
-  const renderCategoryIcon = () => {
+  const renderBadge = () => {
+    // Use logo if logoKind is set to 'logo' and logoUrl exists
+    if (project.logoKind === 'logo' && project.logoUrl) {
+      return (
+        <img
+          src={project.logoUrl}
+          alt={`${project.title} logo`}
+          className="w-full h-full object-contain p-0.5"
+        />
+      );
+    }
+
+    // Fall back to category icon
     const Icon = getCategoryIcon(project.category);
-    return <Icon size={18} style={{ color: project.accentColor }} />;
+    return <Icon size={18} style={{ color: projectColor }} />;
   };
 
   return (
@@ -36,25 +62,25 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     >
       <div
         className="p-6 pb-0 bg-opacity-10"
-        style={{ background: `linear-gradient(to bottom right, ${project.accentColor}1A, transparent)` }}
+        style={{ background: `linear-gradient(to bottom right, ${projectColor}1A, transparent)` }}
         suppressHydrationWarning
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center border"
-              style={{ background: `${project.accentColor}10`, borderColor: `${project.accentColor}30` }}
+              style={{ background: `${projectColor}10`, borderColor: `${projectColor}30` }}
             >
-              {renderCategoryIcon()}
+              {renderBadge()}
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: project.accentColor }}>
+              <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: projectColor }}>
                 {project.category}
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span
                   className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                  style={{ background: `${project.accentColor}15`, color: project.accentColor }}
+                  style={{ background: `${projectColor}15`, color: projectColor }}
                 >
                   {project.status}
                 </span>
@@ -97,7 +123,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <ul className="space-y-1.5">
               {project.impact?.slice(0, 2).map((item: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: project.accentColor }} />
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: projectColor }} />
                   {item}
                 </li>
               ))}
@@ -114,7 +140,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             }
           }}
           className="flex items-center gap-2 text-[12px] font-semibold transition-colors hover:opacity-80 rounded px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ color: project.accentColor, outlineColor: project.accentColor }}
+          style={{ color: projectColor, outlineColor: projectColor }}
           aria-expanded={expanded}
           aria-controls={`case-study-${index}`}
         >
@@ -157,7 +183,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <ul className="space-y-1.5">
                   {project.impact?.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: project.accentColor }} />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: projectColor }} />
                       {item}
                     </li>
                   ))}

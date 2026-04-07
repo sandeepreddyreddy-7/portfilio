@@ -1,1 +1,97 @@
-<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06112D"/>
+      <stop offset="100%" stop-color="#081A4A"/>
+    </linearGradient>
+
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4F4F6"/>
+      <stop offset="25%" stop-color="#D8D8DC"/>
+      <stop offset="55%" stop-color="#9FA3AA"/>
+      <stop offset="78%" stop-color="#EAECEF"/>
+      <stop offset="100%" stop-color="#8B9098"/>
+    </linearGradient>
+
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF1A6"/>
+      <stop offset="28%" stop-color="#E4C96B"/>
+      <stop offset="55%" stop-color="#C99A2E"/>
+      <stop offset="80%" stop-color="#F3D978"/>
+      <stop offset="100%" stop-color="#A87718"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- S -->
+  <path d="
+    M 405 265
+    C 305 265, 235 320, 235 405
+    C 235 490, 298 542, 404 560
+    C 500 576, 555 600, 555 675
+    C 555 742, 500 792, 410 792
+    C 317 792, 253 743, 232 665
+    L 292 665
+    C 314 719, 353 744, 412 744
+    C 474 744, 507 715, 507 676
+    C 507 629, 476 611, 386 594
+    C 271 572, 187 526, 187 407
+    C 187 298, 279 217, 408 217
+    C 520 217, 598 279, 620 367
+    L 560 367
+    C 535 305, 489 265, 405 265
+    Z
+  " fill="url(#silver)" filter="url(#softShadow)"/>
+
+  <!-- R stem + bowl -->
+  <path d="
+    M 548 222
+    L 678 222
+    C 814 222, 876 287, 876 389
+    C 876 477, 821 537, 716 553
+    L 880 800
+    L 805 800
+    L 654 565
+    L 606 565
+    L 606 800
+    L 548 800
+    Z
+
+    M 606 273
+    L 606 514
+    L 680 514
+    C 771 514, 818 471, 818 391
+    C 818 312, 772 273, 682 273
+    Z
+  " fill="url(#gold)" filter="url(#softShadow)"/>
+
+  <!-- Silver swoosh -->
+  <path d="
+    M 112 703
+    C 316 788, 595 801, 874 690
+    C 915 674, 935 692, 887 721
+    C 620 884, 319 872, 105 766
+    C 74 751, 74 688, 112 703
+    Z
+  " fill="url(#silver)" opacity="0.98" filter="url(#softShadow)"/>
+
+  <!-- Gold swoosh -->
+  <path d="
+    M 118 653
+    C 325 731, 604 733, 878 617
+    C 926 597, 958 622, 907 647
+    C 624 790, 325 791, 110 709
+    C 80 697, 80 638, 118 653
+    Z
+  " fill="url(#gold)" filter="url(#softShadow)"/>
+
+  <!-- subtle highlights -->
+  <path d="M250 355 C298 287, 360 254, 430 247" stroke="white" stroke-opacity="0.28" stroke-width="8" stroke-linecap="round"/>
+  <path d="M634 277 L687 277 C768 277, 808 315, 808 387" stroke="white" stroke-opacity="0.2" stroke-width="8" stroke-linecap="round"/>
+</svg>

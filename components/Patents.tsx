@@ -5,6 +5,11 @@ import { motion, useInView } from "framer-motion";
 import { Award, FileText, CheckCircle2 } from "lucide-react";
 import type { Patent } from "@/lib/sanity-types";
 
+// Default color for patents if accent is not set
+const getPatentColor = (patent: { accent?: string }): string => {
+  return patent.accent || '#8B5CF6'; // Purple as default
+};
+
 export default function Patents({ patentsData }: { patentsData: Patent[] }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -36,33 +41,35 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
 
         {/* Patents Grid */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {patents.map((patent, i) => (
+          {patents.map((patent, i) => {
+            const patentColor = getPatentColor(patent);
+            return (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.15, duration: 0.6 }}
               className="glass rounded-2xl p-8 border hover:border-opacity-100 transition-all duration-300 relative overflow-hidden group"
-              style={{ borderColor: `${patent.accent}30` }}
+              style={{ borderColor: `${patentColor}30` }}
               suppressHydrationWarning
             >
               {/* Background gradient */}
-              <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
-                style={{ background: `linear-gradient(to bottom right, ${patent.accent}30, transparent)` }}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: `linear-gradient(to bottom right, ${patentColor}30, transparent)` }}
               />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-6">
-                  <div 
+                  <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center border"
-                    style={{ background: `${patent.accent}15`, borderColor: `${patent.accent}30` }}
+                    style={{ background: `${patentColor}15`, borderColor: `${patentColor}30` }}
                   >
-                    <Award size={24} style={{ color: patent.accent }} />
+                    <Award size={24} style={{ color: patentColor }} />
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-[11px] font-bold tracking-wider uppercase text-[#F1F5F9] px-3 py-1 bg-[#1E2A45] rounded-full flex items-center gap-1.5 border border-[#3B82F6]/30">
-                      <CheckCircle2 size={12} style={{ color: patent.accent }} />
+                      <CheckCircle2 size={12} style={{ color: patentColor }} />
                       {patent.status}
                     </span>
                   </div>
@@ -91,7 +98,8 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
                 </div>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

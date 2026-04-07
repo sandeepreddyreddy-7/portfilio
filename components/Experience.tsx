@@ -5,6 +5,12 @@ import { motion, useInView } from "framer-motion";
 import { Briefcase, GraduationCap } from "lucide-react";
 import type { Experience as ExperienceItem } from "@/lib/sanity-types";
 
+// Default colors by type if accentColor is not set
+const getExperienceColor = (item: { accentColor?: string; type: string }): string => {
+  if (item.accentColor) return item.accentColor;
+  return item.type === 'education' ? '#0EA5E9' : '#14B8A6'; // Cyan for education, teal for work
+};
+
 export default function Experience({ experienceData }: { experienceData: ExperienceItem[] }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -46,6 +52,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
             <div className="space-y-8">
               {timeline.map((item, i) => {
                 const Icon = item.type === 'education' ? GraduationCap : Briefcase;
+                const itemColor = getExperienceColor(item);
                 return (
                   <motion.div
                     key={i}
@@ -58,19 +65,19 @@ export default function Experience({ experienceData }: { experienceData: Experie
                     <div
                       className="absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center border-2 z-10"
                       style={{
-                        background: `${item.accentColor}15`,
-                        borderColor: item.isCurrent ? item.accentColor : `${item.accentColor}40`,
-                        boxShadow: item.isCurrent ? `0 0 20px ${item.accentColor}40` : "none",
+                        background: `${itemColor}15`,
+                        borderColor: item.isCurrent ? itemColor : `${itemColor}40`,
+                        boxShadow: item.isCurrent ? `0 0 20px ${itemColor}40` : "none",
                       }}
                       suppressHydrationWarning
                     >
-                      <Icon size={16} style={{ color: item.accentColor }} />
+                      <Icon size={16} style={{ color: itemColor }} />
                     </div>
 
                     {/* Card */}
                     <div
                       className="glass rounded-2xl p-6 border transition-all duration-300 hover:border-opacity-50"
-                      style={{ borderColor: `${item.accentColor}20` }}
+                      style={{ borderColor: `${itemColor}20` }}
                     >
                       {/* Header */}
                       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
@@ -80,14 +87,14 @@ export default function Experience({ experienceData }: { experienceData: Experie
                             {item.isCurrent && (
                               <span
                                 className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                                style={{ background: `${item.accentColor}20`, color: item.accentColor }}
+                                style={{ background: `${itemColor}20`, color: itemColor }}
                               >
                                 Current
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[14px] font-semibold" style={{ color: item.accentColor }}>
+                            <span className="text-[14px] font-semibold" style={{ color: itemColor }}>
                               {item.company}
                             </span>
                             <span className="text-[#475569] text-xs">·</span>
@@ -105,7 +112,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
                           <li key={j} className="flex items-start gap-2 text-[13px] text-[#94A3B8] leading-relaxed">
                             <span
                               className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                              style={{ background: item.accentColor }}
+                              style={{ background: itemColor }}
                             />
                             {h}
                           </li>

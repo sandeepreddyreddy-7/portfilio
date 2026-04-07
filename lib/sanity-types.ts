@@ -23,6 +23,8 @@ export interface Project extends SanityDocument {
   url?: string;
   order?: number;
   caseStudy?: string;
+  logoKind?: 'icon' | 'logo';
+  logoUrl?: string;
 }
 
 export interface Experience extends SanityDocument {

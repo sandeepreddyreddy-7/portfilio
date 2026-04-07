@@ -71,6 +71,20 @@ export const project = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'logoKind',
+      title: 'Badge Type',
+      type: 'string',
+      options: { list: ['icon', 'logo'], layout: 'radio' },
+      description: 'Use category icon or custom logo image',
+      initialValue: 'icon',
+    }),
+    defineField({
+      name: 'logoUrl',
+      title: 'Logo Image URL',
+      type: 'string',
+      description: 'URL to the logo image (only used if Badge Type is "logo")',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
