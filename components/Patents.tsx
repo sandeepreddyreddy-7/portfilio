@@ -50,22 +50,22 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.15, duration: 0.6 }}
               className="glass rounded-2xl p-8 border hover:border-opacity-100 transition-all duration-300 relative overflow-hidden group"
-              style={{ borderColor: `${patentColor}30` }}
+              style={{ '--patent-color': patentColor } as React.CSSProperties}
               suppressHydrationWarning
             >
               {/* Background gradient */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `linear-gradient(to bottom right, ${patentColor}30, transparent)` }}
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 patent-bg-gradient"
+                style={{ '--patent-color': patentColor } as React.CSSProperties}
               />
 
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-6">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center border"
-                    style={{ background: `${patentColor}15`, borderColor: `${patentColor}30` }}
+                    className="w-12 h-12 rounded-xl flex items-center justify-center border patent-icon-box"
+                    style={{ '--patent-color': patentColor } as React.CSSProperties}
                   >
-                    <Award size={24} style={{ color: patentColor }} />
+                    <Award size={24} className="patent-icon" style={{ '--patent-color': patentColor } as React.CSSProperties} />
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-[11px] font-bold tracking-wider uppercase text-[#F1F5F9] px-3 py-1 bg-[#1E2A45] rounded-full flex items-center gap-1.5 border border-[#3B82F6]/30">
@@ -93,7 +93,7 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
                 <div className="pt-5 border-t border-[#1E2A45]/60 flex flex-wrap gap-2">
                   <span className="text-[11px] font-bold tracking-widest uppercase text-[#475569] w-full mb-1">Related Technology</span>
                   {patent.tech?.map((t: string) => (
-                    <span key={t} className="tech-tag" style={{ fontSize: "11px" }}>{t}</span>
+                    <span key={t} className="tech-tag">{t}</span>
                   ))}
                 </div>
               </div>

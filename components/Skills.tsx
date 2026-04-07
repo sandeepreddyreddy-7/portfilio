@@ -79,7 +79,6 @@ export default function Skills({ skillsData }: { skillsData: Skill[] }) {
                       <span
                         key={skill}
                         className="tech-tag hover:border-[#3B82F6]/50 hover:bg-[#3B82F6]/10 transition-colors"
-                        style={{ borderColor: 'rgba(30, 42, 69, 0.8)' }}
                       >
                         {skill}
                       </span>

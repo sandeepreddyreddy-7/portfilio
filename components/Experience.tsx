@@ -63,21 +63,17 @@ export default function Experience({ experienceData }: { experienceData: Experie
                   >
                     {/* Dot */}
                     <div
-                      className="absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center border-2 z-10"
-                      style={{
-                        background: `${itemColor}15`,
-                        borderColor: item.isCurrent ? itemColor : `${itemColor}40`,
-                        boxShadow: item.isCurrent ? `0 0 20px ${itemColor}40` : "none",
-                      }}
+                      className={`absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center border-2 z-10 exp-dot ${item.isCurrent ? 'current' : ''}`}
+                      style={{ '--item-color': itemColor } as React.CSSProperties}
                       suppressHydrationWarning
                     >
-                      <Icon size={16} style={{ color: itemColor }} />
+                      <Icon size={16} className="exp-dot-icon" style={{ '--item-color': itemColor } as React.CSSProperties} />
                     </div>
 
                     {/* Card */}
                     <div
-                      className="glass rounded-2xl p-6 border transition-all duration-300 hover:border-opacity-50"
-                      style={{ borderColor: `${itemColor}20` }}
+                      className="glass rounded-2xl p-6 border transition-all duration-300 hover:border-opacity-50 exp-card"
+                      style={{ '--item-color': itemColor } as React.CSSProperties}
                     >
                       {/* Header */}
                       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
@@ -86,15 +82,15 @@ export default function Experience({ experienceData }: { experienceData: Experie
                             <h3 className="text-[17px] font-bold text-[#F1F5F9]">{item.role}</h3>
                             {item.isCurrent && (
                               <span
-                                className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                                style={{ background: `${itemColor}20`, color: itemColor }}
+                                className="text-[10px] font-bold px-2 py-0.5 rounded-full exp-badge"
+                                style={{ '--item-color': itemColor } as React.CSSProperties}
                               >
                                 Current
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[14px] font-semibold" style={{ color: itemColor }}>
+                            <span className="text-[14px] font-semibold exp-company" style={{ '--item-color': itemColor } as React.CSSProperties}>
                               {item.company}
                             </span>
                             <span className="text-[#475569] text-xs">·</span>
@@ -111,8 +107,8 @@ export default function Experience({ experienceData }: { experienceData: Experie
                         {item.highlights?.map((h: string, j: number) => (
                           <li key={j} className="flex items-start gap-2 text-[13px] text-[#94A3B8] leading-relaxed">
                             <span
-                              className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                              style={{ background: itemColor }}
+                              className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0 exp-highlight-dot"
+                              style={{ '--item-color': itemColor } as React.CSSProperties}
                             />
                             {h}
                           </li>
@@ -122,7 +118,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
                       {/* Tags */}
                       <div className="flex flex-wrap gap-1.5 pt-4 border-t border-[#1E2A45]/40">
                         {item.tags?.map((t: string) => (
-                          <span key={t} className="tech-tag" style={{ fontSize: "11px" }}>{t}</span>
+                          <span key={t} className="tech-tag">{t}</span>
                         ))}
                       </div>
                     </div>

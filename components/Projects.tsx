@@ -61,26 +61,26 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       className="project-card rounded-2xl overflow-hidden border border-[#1E2A45]/80 hover:border-opacity-50 transition-all duration-300 glass min-h-[500px] flex flex-col"
     >
       <div
-        className="p-6 pb-0 bg-opacity-10"
-        style={{ background: `linear-gradient(to bottom right, ${projectColor}1A, transparent)` }}
+        className="p-6 pb-0 bg-opacity-10 project-bg-gradient"
+        style={{ '--project-color': projectColor } as React.CSSProperties}
         suppressHydrationWarning
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center border"
-              style={{ background: `${projectColor}10`, borderColor: `${projectColor}30` }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center border project-icon-box"
+              style={{ '--project-color': projectColor } as React.CSSProperties}
             >
               {renderBadge()}
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: projectColor }}>
+              <div className="text-xs font-semibold uppercase tracking-wider project-category" style={{ '--project-color': projectColor } as React.CSSProperties}>
                 {project.category}
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span
-                  className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                  style={{ background: `${projectColor}15`, color: projectColor }}
+                  className="text-[10px] font-semibold px-2 py-0.5 rounded-full project-status"
+                  style={{ '--project-color': projectColor } as React.CSSProperties}
                 >
                   {project.status}
                 </span>
@@ -92,8 +92,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg text-[#475569] hover:text-[#F1F5F9] transition-colors"
-              style={{ background: "rgba(30,42,69,0.4)" }}
+              className="p-2 rounded-lg text-[#475569] hover:text-[#F1F5F9] transition-colors bg-[#1E2A45]/40"
               aria-label={`Open ${project.title}`}
             >
               <ArrowUpRight size={14} />
@@ -106,7 +105,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         <div className="flex flex-wrap gap-1.5 mb-5">
           {project.techStack?.map((t: string) => (
-            <span key={t} className="tech-tag" style={{ fontSize: "11px" }}>{t}</span>
+            <span key={t} className="tech-tag">{t}</span>
           ))}
         </div>
       </div>
@@ -123,7 +122,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <ul className="space-y-1.5">
               {project.impact?.slice(0, 2).map((item: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: projectColor }} />
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
                   {item}
                 </li>
               ))}
@@ -139,8 +138,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               setExpanded(!expanded);
             }
           }}
-          className="flex items-center gap-2 text-[12px] font-semibold transition-colors hover:opacity-80 rounded px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ color: projectColor, outlineColor: projectColor }}
+          className="flex items-center gap-2 text-[12px] font-semibold transition-colors hover:opacity-80 rounded px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 project-btn"
+          style={{ '--project-color': projectColor } as React.CSSProperties}
           aria-expanded={expanded}
           aria-controls={`case-study-${index}`}
         >
@@ -171,7 +170,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <ul className="space-y-1.5">
                   {project.architecture?.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[#3B82F6]" />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
                       {item}
                     </li>
                   ))}
@@ -183,7 +182,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 <ul className="space-y-1.5">
                   {project.impact?.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: projectColor }} />
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 project-impact-dot" style={{ '--project-color': projectColor } as React.CSSProperties} />
                       {item}
                     </li>
                   ))}
