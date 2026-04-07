@@ -49,7 +49,10 @@ export function middleware(request: NextRequest) {
       ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://plausible.io`
       : `script-src 'self' 'nonce-${nonce}' https://plausible.io`,
     `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
-    `style-src-attr 'nonce-${nonce}'`,
+    // style-src-attr cannot use nonces (spec limitation) — framer-motion requires
+    // inline style attributes for animation. 'unsafe-inline' here is the accepted
+    // trade-off; critical XSS protection comes from strict nonce-gated script-src.
+    "style-src-attr 'unsafe-inline'",
     `style-src-elem 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
     "img-src 'self' data: https://cdn.sanity.io",
     "font-src 'self' https://fonts.gstatic.com",
