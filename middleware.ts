@@ -49,6 +49,8 @@ export function middleware(request: NextRequest) {
       ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://plausible.io`
       : `script-src 'self' 'nonce-${nonce}' https://plausible.io`,
     `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
+    `style-src-attr 'nonce-${nonce}'`,
+    `style-src-elem 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
     "img-src 'self' data: https://cdn.sanity.io",
     "font-src 'self' https://fonts.gstatic.com",
     "connect-src 'self' https://cdn.sanity.io https://*.sanity.io https://plausible.io",
