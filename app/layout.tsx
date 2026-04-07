@@ -84,6 +84,7 @@ const jsonLd = {
 };
 
 import ScrollUX from "@/components/ScrollUX";
+import { MotionProvider } from "@/components/MotionProvider";
 import Script from "next/script";
 
 export default async function RootLayout({
@@ -118,8 +119,10 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <ScrollUX />
-        {children}
+        <MotionProvider nonce={nonce}>
+          <ScrollUX />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );
