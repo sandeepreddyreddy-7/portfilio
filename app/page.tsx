@@ -24,7 +24,6 @@ export default async function Home() {
   let patentsData: Patent[] = [];
   let skillsData: Skill[] = [];
   let aboutData: AboutData | null = null;
-  let sanityError = false;
 
   try {
     [projectsData, experienceData, patentsData, skillsData, aboutData] = await Promise.all([
@@ -51,7 +50,6 @@ export default async function Home() {
       },
     });
 
-    sanityError = true;
     // Fallback: all data defaults to empty arrays/null
     // UI will render with skeleton loaders and empty states
   }

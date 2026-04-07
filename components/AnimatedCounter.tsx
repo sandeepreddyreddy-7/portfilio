@@ -13,14 +13,15 @@ export default function AnimatedCounter({
   duration = 2000,
   onComplete,
 }: AnimatedCounterProps) {
-  const [displayValue, setDisplayValue] = useState("0");
+  const [displayValue, setDisplayValue] = useState(() => value);
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const { numericValue, suffix } = useMemo(() => {
+  const { numericValue, suffix, isNumeric } = useMemo(() => {
     const num = parseInt(value.replace(/\D/g, ""), 10);
     const suf = value.replace(/\d/g, "");
-    return { numericValue: num, suffix: suf };
+    const isNum = !Number.isNaN(num) && num !== 0;
+    return { numericValue: num, suffix: suf, isNumeric: isNum };
   }, [value]);
 
   useEffect(() => {
@@ -44,13 +45,13 @@ export default function AnimatedCounter({
   useEffect(() => {
     if (!isVisible) return;
 
-    // If value is not numeric, display as-is
-    if (!numericValue || isNaN(numericValue)) {
-      setDisplayValue(value);
+    // If value is not numeric, no animation needed
+    if (!isNumeric) {
       return;
     }
 
     const startTime = Date.now();
+    let animationFrameId: number;
 
     const animate = () => {
       const now = Date.now();
@@ -63,15 +64,16 @@ export default function AnimatedCounter({
       setDisplayValue(currentValue + suffix);
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
       } else {
         setDisplayValue(value);
         onComplete?.();
       }
     };
 
-    requestAnimationFrame(animate);
-  }, [isVisible, value, duration, onComplete, numericValue, suffix]);
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isVisible, value, duration, onComplete, numericValue, suffix, isNumeric]);
 
   return <div ref={elementRef}>{displayValue}</div>;
 }

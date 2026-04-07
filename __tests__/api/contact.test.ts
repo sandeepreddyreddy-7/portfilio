@@ -32,7 +32,7 @@ jest.mock('resend', () => ({
 import { POST } from '@/app/api/contact/route';
 
 // Helper to create a mock Request object compatible with Next.js API routes
-const createMockRequest = (body: unknown, ip = '127.0.0.1'): any => {
+const createMockRequest = (body: unknown, ip = '127.0.0.1'): Request => {
   return {
     json: async () => body,
     headers: new Map([
@@ -41,7 +41,7 @@ const createMockRequest = (body: unknown, ip = '127.0.0.1'): any => {
       ['x-request-id', `req-${Math.random()}`],
     ]),
     method: 'POST',
-  } as any as Request;
+  } as unknown as Request;
 };
 
 describe('/api/contact', () => {

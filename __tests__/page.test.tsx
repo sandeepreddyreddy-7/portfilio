@@ -100,7 +100,8 @@ describe('app/page.tsx (Home)', () => {
     const element = await Home();
 
     // Check that the main structure is present
-    const mainElement = (element as any).props.children[1]; // main is second child
+    const elementProps = (element as { props: { children: unknown[] } }).props;
+    const mainElement = elementProps.children[1]; // main is second child
     expect(mainElement).toBeTruthy();
   });
 

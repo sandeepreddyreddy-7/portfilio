@@ -9,8 +9,8 @@ jest.mock('@/sanity/lib/client', () => ({
 }));
 
 // Dynamic import to avoid Request initialization issues
-let GET: any;
-let mockClient: any;
+let GET: () => Promise<Response>;
+let mockClient: { fetch: jest.Mock };
 
 beforeAll(async () => {
   const healthModule = await import('@/app/api/health/route');

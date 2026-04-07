@@ -132,11 +132,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
+      const errorCode = error && typeof error === 'object' && 'code' in error ? error.code : 'unknown';
       logger.error('Resend delivery failed', new Error(error.message), {
         requestId,
         email,
         ip,
-        resendErrorCode: (error as any).code,
+        resendErrorCode: errorCode,
       });
 
       Sentry.captureException(error, {
