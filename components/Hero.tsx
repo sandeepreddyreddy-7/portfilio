@@ -325,11 +325,8 @@ export default function Hero() {
                 {/* Code */}
                 <div className="p-6 font-mono text-[13px] leading-7">
                   {codeSnippet.split("\n").map((line, i) => (
-                    <motion.div
+                    <div
                       key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.6 + i * 0.05, duration: 0.4 }}
                       className="text-[#94A3B8] whitespace-pre"
                     >
                       {line
@@ -343,7 +340,7 @@ export default function Hero() {
                             return <span key={j} className="text-[#3B82F6]">{part}</span>;
                           return <span key={j}>{part}</span>;
                         })}
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
