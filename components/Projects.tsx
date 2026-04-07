@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, ChevronDown, ChevronUp, Zap, Shield, Bot, Folder } from "lucide-react";
 import type { Project } from "@/lib/sanity-types";
 
@@ -150,16 +150,16 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           )}
         </button>
 
-        <AnimatePresence>
-          {expanded && (
-            <motion.div
-              id={`case-study-${index}`}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.35 }}
-              className="overflow-hidden space-y-5"
-            >
+        {/* Case study — CSS grid-rows trick for height 0→auto, no style injection */}
+        <div
+          id={`case-study-${index}`}
+          className={`grid transition-[grid-template-rows,opacity] duration-350 ease-in-out ${
+            expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+          aria-hidden={!expanded}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-5">
               <div>
                 <div className="text-[11px] font-bold uppercase tracking-widest text-[#475569] mb-2 pt-4">Solution</div>
                 <p className="text-[14px] text-[#94A3B8] leading-relaxed">{project.solution}</p>
@@ -188,9 +188,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   ))}
                 </ul>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -255,21 +255,11 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 auto-rows-fr items-stretch">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, i) => (
-              <motion.div
-                key={project._id || i}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className="h-full"
-              >
-                <ProjectCard project={project} index={i} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {filteredProjects.map((project, i) => (
+            <div key={project._id || i} className="h-full">
+              <ProjectCard project={project} index={i} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
 export default function ScrollUX() {
@@ -45,23 +45,17 @@ export default function ScrollUX() {
         style={{ originX: 0, scaleX: scrollProgress / 100 }}
       />
 
-      {/* Floating Back to Top Button */}
-      <AnimatePresence>
-        {showTopBtn && (
-          <motion.button
-            initial={{ opacity: 0, y: 20, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.8 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-[90] w-12 h-12 rounded-full bg-[#1E2A45]/80 backdrop-blur-md border border-[#3B82F6]/30 shadow-[0_8px_32px_rgba(59,130,246,0.2)] flex items-center justify-center text-[#F1F5F9] hover:bg-[#3B82F6] hover:border-transparent transition-colors group"
-            aria-label="Back to top"
-          >
-            <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Floating Back to Top Button — CSS opacity/transform transition, no style injection */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 z-[90] w-12 h-12 rounded-full bg-[#1E2A45]/80 backdrop-blur-md border border-[#3B82F6]/30 shadow-[0_8px_32px_rgba(59,130,246,0.2)] flex items-center justify-center text-[#F1F5F9] hover:bg-[#3B82F6] hover:border-transparent hover:scale-110 active:scale-90 transition-all duration-300 group ${
+          showTopBtn ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-5 scale-75 pointer-events-none"
+        }`}
+        aria-label="Back to top"
+        aria-hidden={!showTopBtn}
+      >
+        <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
+      </button>
     </>
   );
 }

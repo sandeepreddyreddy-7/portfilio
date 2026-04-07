@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Menu, X, Code2 } from "lucide-react";
 
 const links = [
@@ -120,46 +120,43 @@ export default function Nav() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-[#1E2A45]/60 bg-[#0B0F19]/95 backdrop-blur-xl overflow-hidden"
-          >
-            <div className="px-6 py-4 flex flex-col gap-1">
-              {links.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNav(link.href)}
-                  className="text-left px-3 py-3 text-[#94A3B8] hover:text-[#F1F5F9] text-sm font-medium transition-colors rounded-lg hover:bg-[#1E2A45]/40"
-                >
-                  {link.label}
-                </button>
-              ))}
-              <div className="pt-3 border-t border-[#1E2A45]/60 flex flex-col gap-2">
-                <a
-                  href="/Sandeep_Reddy_Resume.pdf"
-                  download
-                  className="btn-secondary text-sm py-3 w-full justify-center"
-                >
-                  Resume
-                </a>
-                <button
-                  onClick={() => handleNav("#contact")}
-                  className="btn-primary text-sm py-3 w-full justify-center"
-                >
-                  Let&apos;s Talk
-                </button>
-              </div>
+      {/* Mobile menu — CSS grid-rows trick for height 0→auto with no style injection */}
+      <div
+        id="mobile-menu"
+        className={`md:hidden border-t border-[#1E2A45]/60 bg-[#0B0F19]/95 backdrop-blur-xl grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+          mobileOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+        aria-hidden={!mobileOpen}
+      >
+        <div className="overflow-hidden">
+          <div className="px-6 py-4 flex flex-col gap-1">
+            {links.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => handleNav(link.href)}
+                className="text-left px-3 py-3 text-[#94A3B8] hover:text-[#F1F5F9] text-sm font-medium transition-colors rounded-lg hover:bg-[#1E2A45]/40"
+              >
+                {link.label}
+              </button>
+            ))}
+            <div className="pt-3 border-t border-[#1E2A45]/60 flex flex-col gap-2">
+              <a
+                href="/Sandeep_Reddy_Resume.pdf"
+                download
+                className="btn-secondary text-sm py-3 w-full justify-center"
+              >
+                Resume
+              </a>
+              <button
+                onClick={() => handleNav("#contact")}
+                className="btn-primary text-sm py-3 w-full justify-center"
+              >
+                Let&apos;s Talk
+              </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
     </motion.header>
   );
 }

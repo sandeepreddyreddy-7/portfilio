@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Skill } from "@/lib/sanity-types";
 
@@ -53,7 +53,6 @@ export default function Skills({ skillsData }: { skillsData: Skill[] }) {
 
         {/* Masonry-style Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-          <AnimatePresence mode="popLayout">
             {categories.map((category, ci) => {
               const isVisible = isMobile === null || ci < MAX_VISIBLE_MOBILE || expandedMobile || !isMobile;
               if (!isVisible) return null;
@@ -63,7 +62,6 @@ export default function Skills({ skillsData }: { skillsData: Skill[] }) {
                   key={category.label}
                   initial={{ opacity: 0, y: 24 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
-                  exit={{ opacity: 0, y: -24 }}
                   transition={{ delay: ci * 0.1, duration: 0.6 }}
                   className="glass rounded-2xl p-6 border border-[#1E2A45]/80 hover:border-[#1E2A45] transition-all duration-300 min-h-[280px] flex flex-col"
                 >
@@ -87,8 +85,7 @@ export default function Skills({ skillsData }: { skillsData: Skill[] }) {
                 </motion.div>
               );
             })}
-          </AnimatePresence>
-        </div>
+          </div>
 
         {/* Show More Button - Mobile Only */}
         {showMore && (
