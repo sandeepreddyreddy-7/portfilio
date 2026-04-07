@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, Send, MapPin, CheckCircle } from "lucide-react";
 import { LinkedInSVG } from "@/components/Icons";
+import { VALIDATION, EMAIL_RE } from "@/lib/validation";
 
 const socials = [
   {
@@ -33,32 +34,105 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+
+  const validateField = (field: string, value: string) => {
+    const errors: { name?: string; email?: string; message?: string } = {};
+
+    if (field === "name" || field === "all") {
+      const nameVal = field === "name" ? value : formState.name;
+      if (!nameVal.trim()) {
+        errors.name = "Name is required";
+      } else if (nameVal.trim().length < VALIDATION.name.min) {
+        errors.name = `Name must be at least ${VALIDATION.name.min} characters`;
+      } else if (nameVal.trim().length > VALIDATION.name.max) {
+        errors.name = `Name must be at most ${VALIDATION.name.max} characters`;
+      }
+    }
+
+    if (field === "email" || field === "all") {
+      const emailValue = field === "email" ? value : formState.email;
+      if (!emailValue.trim()) {
+        errors.email = "Email is required";
+      } else if (!EMAIL_RE.test(emailValue)) {
+        errors.email = "Please enter a valid email";
+      }
+    }
+
+    if (field === "message" || field === "all") {
+      const messageValue = field === "message" ? value : formState.message;
+      if (!messageValue.trim()) {
+        errors.message = "Message is required";
+      } else if (messageValue.trim().length < VALIDATION.message.min) {
+        errors.message = `Message must be at least ${VALIDATION.message.min} characters`;
+      } else if (messageValue.trim().length > VALIDATION.message.max) {
+        errors.message = `Message must be at most ${VALIDATION.message.max} characters`;
+      }
+    }
+
+    return errors;
+  };
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormState({ ...formState, [field]: value });
+    const errors = validateField(field, value);
+    setFieldErrors((prev) => ({ ...prev, ...errors }));
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+    setFieldErrors({});
+
+    // Validate all fields
+    const allErrors = validateField("all", "");
+    if (Object.keys(allErrors).length > 0) {
+      setFieldErrors(allErrors);
+      return;
+    }
+
+    setLoading(true);
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formState),
       });
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        const data = await response.json().catch(() => ({}));
-        setError(data.error ?? 'Failed to send message. Please try again.');
+
+      let errorData: { error?: string } = {};
+      if (!response.ok) {
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: "Invalid server response" };
+        }
+
+        // Provide specific error messages based on status code
+        if (response.status === 400) {
+          setError(errorData.error ?? "Please check your input and try again.");
+        } else if (response.status === 429) {
+          setError("Too many requests. Please wait a few minutes before trying again.");
+        } else if (response.status >= 500) {
+          setError("Our server is having issues. We're working on it. Please try again in a few moments.");
+        } else {
+          setError(errorData.error ?? "Failed to send message. Please try again.");
+        }
+        return;
       }
-    } catch {
-      setError('Network error. Please check your connection and try again.');
+
+      // Success
+      setSubmitted(true);
+      setFormState({ name: "", email: "", message: "" });
+      setFieldErrors({});
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contact" className="relative py-28" ref={ref}>
+    <section id="contact" className="relative py-28" ref={ref} suppressHydrationWarning>
       {/* Background glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-gradient-radial from-[#8B5CF6]/8 to-transparent blur-3xl pointer-events-none" />
 
@@ -69,6 +143,7 @@ export default function Contact() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
+          suppressHydrationWarning
         >
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#8B5CF6] uppercase tracking-widest mb-4">
             <span className="w-8 h-px bg-[#8B5CF6]" />
@@ -91,6 +166,7 @@ export default function Contact() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.1, duration: 0.6 }}
             className="lg:col-span-2 space-y-6"
+            suppressHydrationWarning
           >
             {/* Location */}
             <div className="flex items-center gap-3 text-[#94A3B8]">
@@ -150,6 +226,7 @@ export default function Contact() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.6 }}
             className="lg:col-span-3"
+            suppressHydrationWarning
           >
             {submitted ? (
               <div className="glass rounded-2xl p-10 border border-[#1E2A45]/60 flex flex-col items-center justify-center text-center h-full min-h-[360px]">
@@ -177,12 +254,21 @@ export default function Contact() {
                       id="contact-name"
                       type="text"
                       value={formState.name}
-                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      onChange={(e) => handleFieldChange("name", e.target.value)}
                       placeholder="John Smith"
                       required
                       aria-required="true"
-                      className="w-full bg-[#0B0F19]/60 border border-[#1E2A45] rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none focus:border-[#3B82F6] transition-colors"
+                      aria-invalid={!!fieldErrors.name}
+                      aria-describedby={fieldErrors.name ? "name-error" : undefined}
+                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${
+                        fieldErrors.name
+                          ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                          : "border-[#1E2A45] focus:border-[#3B82F6]"
+                      }`}
                     />
+                    {fieldErrors.name && (
+                      <p id="name-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.name}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="contact-email" className="text-[12px] font-semibold text-[#475569] uppercase tracking-wider block mb-2">
@@ -192,28 +278,53 @@ export default function Contact() {
                       id="contact-email"
                       type="email"
                       value={formState.email}
-                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      onChange={(e) => handleFieldChange("email", e.target.value)}
                       placeholder="john@company.com"
                       required
                       aria-required="true"
-                      className="w-full bg-[#0B0F19]/60 border border-[#1E2A45] rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none focus:border-[#3B82F6] transition-colors"
+                      aria-invalid={!!fieldErrors.email}
+                      aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${
+                        fieldErrors.email
+                          ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                          : "border-[#1E2A45] focus:border-[#3B82F6]"
+                      }`}
                     />
+                    {fieldErrors.email && (
+                      <p id="email-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.email}</p>
+                    )}
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="contact-message" className="text-[12px] font-semibold text-[#475569] uppercase tracking-wider block mb-2">
-                    Message <span aria-hidden="true" className="text-red-400">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="contact-message" className="text-[12px] font-semibold text-[#475569] uppercase tracking-wider">
+                      Message <span aria-hidden="true" className="text-red-400">*</span>
+                    </label>
+                    <span className="text-[11px] text-[#64748B]">{formState.message.length}/{VALIDATION.message.max}</span>
+                  </div>
                   <textarea
                     id="contact-message"
                     value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, VALIDATION.message.max);
+                      handleFieldChange("message", value);
+                    }}
                     placeholder="Tell me about the opportunity or project..."
                     required
                     aria-required="true"
                     rows={5}
-                    className="w-full bg-[#0B0F19]/60 border border-[#1E2A45] rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none focus:border-[#3B82F6] transition-colors resize-none"
+                    maxLength={VALIDATION.message.max}
+                    aria-invalid={!!fieldErrors.message}
+                    aria-describedby={fieldErrors.message ? "message-error" : undefined}
+                    className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors resize-none ${
+                      fieldErrors.message
+                        ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                        : "border-[#1E2A45] focus:border-[#3B82F6]"
+                    }`}
                   />
+                  {fieldErrors.message && (
+                    <p id="message-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.message}</p>
+                  )}
                 </div>
                 {error && (
                   <p role="alert" className="text-[13px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">

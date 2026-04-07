@@ -23,7 +23,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
   };
 
   return (
-    <section id="about" className="relative py-28 overflow-hidden" ref={ref}>
+    <section id="about" className="relative py-28 overflow-hidden" ref={ref} suppressHydrationWarning>
       {/* Subtle glow */}
       <div className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full bg-gradient-radial from-[#3B82F6]/5 to-transparent blur-3xl pointer-events-none -translate-y-1/2" />
 
@@ -35,6 +35,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
               initial={{ opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
+              suppressHydrationWarning
             >
               <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#3B82F6] uppercase tracking-widest mb-4">
                 <span className="w-8 h-px bg-[#3B82F6]" />
@@ -51,6 +52,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.15, duration: 0.6 }}
               className="space-y-5 text-[16px] text-[#94A3B8] leading-relaxed"
+              suppressHydrationWarning
             >
               {paragraphs.map((text: string, idx: number) => (
                 <p key={idx}>{text}</p>
@@ -63,6 +65,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3, duration: 0.6 }}
               className="mt-8 pt-8 border-t border-[#1E2A45]/60 grid grid-cols-2 gap-6"
+              suppressHydrationWarning
             >
               {[
                 { school: "Texas A&M University", degree: "M.S. Computer Science" },
@@ -87,6 +90,7 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
                   animate={inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
                   className={`glass rounded-xl p-5 border border-[#1E2A45]/80 hover:border-opacity-50 transition-all duration-300 group hover:bg-[#1E2A45]/30`}
+                  suppressHydrationWarning
                 >
                   <div className={`mb-3 ${val.color}`}>
                     <Icon size={22} className="group-hover:scale-110 transition-transform duration-300" />

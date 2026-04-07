@@ -1,84 +1,198 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { Resend } from 'resend';
+import { VALIDATION, EMAIL_RE } from '@/lib/validation';
+import { logger, setRequestId } from '@/lib/logger';
 
-// Simple in-memory rate limiter (per IP, resets on cold start)
-const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 60_000; // 60 seconds
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(ip, { count: 1, windowStart: now });
-    return false;
-  }
-  entry.count += 1;
-  return entry.count > RATE_LIMIT_MAX;
-}
-
-// Validates local@domain.tld — rejects missing TLD, consecutive dots, leading/trailing dots
-const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+// ─────────────────────────────────────────────────────────────────────────────
+// STARTUP VALIDATION — Fail fast if critical env vars are missing
+// ─────────────────────────────────────────────────────────────────────────────
 
 if (!process.env.RESEND_API_KEY) {
-  console.error('RESEND_API_KEY is not set — contact form emails will not be delivered.');
+  throw new Error(
+    'RESEND_API_KEY is required. Add it to .env.local to enable contact form emails.'
+  );
 }
+
+if (!process.env.CONTACT_FORM_RECIPIENT) {
+  throw new Error(
+    'CONTACT_FORM_RECIPIENT is required. Add it to .env.local.'
+  );
+}
+
 const resend = new Resend(process.env.RESEND_API_KEY);
+const CONTACT_RECIPIENT = process.env.CONTACT_FORM_RECIPIENT;
+const CONTACT_FROM = process.env.CONTACT_FORM_FROM || 'noreply@sandeepreddy.dev';
 
-export async function POST(req: Request) {
-  try {
-    const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-      req.headers.get('x-real-ip') ??
-      'unknown';
+// ─────────────────────────────────────────────────────────────────────────────
+// RATE LIMITING (Vercel KV for production; in-memory fallback for dev)
+// ─────────────────────────────────────────────────────────────────────────────
 
-    if (isRateLimited(ip)) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
-      );
+const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '5');
+const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000');
+const EMAIL_RATE_LIMIT_MAX = 2; // 2 emails per hour per email address
+const EMAIL_RATE_LIMIT_WINDOW_MS = 3_600_000; // 1 hour
+
+// Fallback in-memory rate limiting for development
+const devIpRateLimitMap = new Map<string, { count: number; windowStart: number }>();
+const devEmailRateLimitMap = new Map<string, { count: number; windowStart: number }>();
+
+async function isRateLimited(ip: string, email: string, requestId: string): Promise<boolean> {
+  // In production, use Vercel KV. For now, use in-memory (dev only)
+  // TODO: Migrate to @vercel/kv in production
+  if (process.env.NODE_ENV === 'production' && !process.env.KV_URL) {
+    logger.warn('Rate limiting not configured for production. Install @vercel/kv and set KV_URL', {
+      requestId,
+      ip,
+    });
+  }
+
+  const now = Date.now();
+
+  // Check IP-based rate limit
+  {
+    const key = `ip:${ip}`;
+    const entry = devIpRateLimitMap.get(key);
+    if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+      devIpRateLimitMap.set(key, { count: 1, windowStart: now });
+    } else {
+      entry.count += 1;
+      if (entry.count > RATE_LIMIT_MAX) {
+        logger.warn('IP rate limit exceeded', { requestId, ip, count: entry.count });
+        return true;
+      }
     }
+  }
 
+  // Check email-based rate limit
+  {
+    const key = `email:${email}`;
+    const entry = devEmailRateLimitMap.get(key);
+    if (!entry || now - entry.windowStart > EMAIL_RATE_LIMIT_WINDOW_MS) {
+      devEmailRateLimitMap.set(key, { count: 1, windowStart: now });
+    } else {
+      entry.count += 1;
+      if (entry.count > EMAIL_RATE_LIMIT_MAX) {
+        logger.warn('Email rate limit exceeded', { requestId, email, count: entry.count });
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REQUEST HANDLER
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+  const requestId = req.headers.get('x-request-id') || crypto.randomUUID();
+  setRequestId(requestId);
+
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
+
+  try {
     const { name, email, message } = await req.json();
 
+    // Validate required fields
     if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return logAndRespond(ip, 400, 'Missing required fields', startTime, requestId);
     }
 
-    if (typeof name !== 'string' || name.length > 100) {
-      return NextResponse.json({ error: 'Name is too long.' }, { status: 400 });
-    }
-    if (typeof email !== 'string' || email.length > 254 || !EMAIL_RE.test(email)) {
-      return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 });
-    }
-    if (typeof message !== 'string' || message.length > 5000) {
-      return NextResponse.json({ error: 'Message is too long (max 5000 characters).' }, { status: 400 });
+    // Validate field types and lengths
+    if (typeof name !== 'string' || name.length < VALIDATION.name.min || name.length > VALIDATION.name.max) {
+      return logAndRespond(ip, 400, `Name must be ${VALIDATION.name.min}-${VALIDATION.name.max} characters`, startTime, requestId);
     }
 
+    if (typeof email !== 'string' || email.length > VALIDATION.email.max || !EMAIL_RE.test(email)) {
+      return logAndRespond(ip, 400, 'Invalid email address', startTime, requestId);
+    }
+
+    if (typeof message !== 'string' || message.length < VALIDATION.message.min || message.length > VALIDATION.message.max) {
+      return logAndRespond(ip, 400, `Message must be ${VALIDATION.message.min}-${VALIDATION.message.max} characters`, startTime, requestId);
+    }
+
+    // Check rate limits (IP + email)
+    if (await isRateLimited(ip, email, requestId)) {
+      return logAndRespond(ip, 429, 'Too many requests. Please try again later', startTime, requestId);
+    }
+
+    // Send email
     const { data, error } = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'sandeep@sandeepreddy.dev',
+      from: `Portfolio Contact <${CONTACT_FROM}>`,
+      to: CONTACT_RECIPIENT,
       subject: `New Portfolio Message from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      replyTo: email,
     });
 
     if (error) {
-      console.error('Resend error:', error);
-      return NextResponse.json(
-        { error: 'Failed to send message. Please try again.' },
-        { status: 500 }
-      );
+      logger.error('Resend delivery failed', new Error(error.message), {
+        requestId,
+        email,
+        ip,
+        resendErrorCode: (error as any).code,
+      });
+
+      Sentry.captureException(error, {
+        level: 'error',
+        contexts: {
+          contact_form: { email, ip, requestId },
+        },
+      });
+      return logAndRespond(ip, 500, 'Failed to send message. Please try again', startTime, requestId);
     }
 
-    return NextResponse.json({ success: true, data });
+    logger.info('Contact form submitted successfully', {
+      requestId,
+      email,
+      ip,
+      resendId: data?.id,
+    });
+
+    const response = NextResponse.json({ success: true, data }, { status: 200 });
+    response.headers.set('x-request-id', requestId);
+    return response;
   } catch (err) {
-    console.error('Contact API error:', err);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    logger.error('Contact API error', err instanceof Error ? err : new Error(String(err)), {
+      requestId,
+      ip,
+    });
+
+    Sentry.captureException(err, {
+      level: 'error',
+      contexts: { contact_form: { ip, requestId } },
+    });
+
+    return logAndRespond(ip, 500, 'Internal server error', startTime, requestId);
   }
+}
+
+/**
+ * Log and return JSON response
+ */
+function logAndRespond(
+  ip: string,
+  status: number,
+  message: string,
+  startTime: number,
+  requestId: string
+): NextResponse {
+  const duration = Date.now() - startTime;
+  setRequestId(requestId);
+  logger.info(`Contact API request`, {
+    ip,
+    status,
+    duration,
+    message: status >= 400 ? message : undefined,
+  });
+
+  const response = NextResponse.json({ error: message }, { status });
+  response.headers.set('x-request-id', requestId);
+  return response;
 }

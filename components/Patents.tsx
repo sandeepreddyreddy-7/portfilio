@@ -11,7 +11,7 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
   const patents = patentsData || [];
 
   return (
-    <section id="patents" className="relative py-28" ref={ref}>
+    <section id="patents" className="relative py-28" ref={ref} suppressHydrationWarning>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -19,6 +19,7 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
+          suppressHydrationWarning
         >
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#8B5CF6] uppercase tracking-widest mb-4">
             <span className="w-8 h-px bg-[#8B5CF6]" />
@@ -43,6 +44,7 @@ export default function Patents({ patentsData }: { patentsData: Patent[] }) {
               transition={{ delay: i * 0.15, duration: 0.6 }}
               className="glass rounded-2xl p-8 border hover:border-opacity-100 transition-all duration-300 relative overflow-hidden group"
               style={{ borderColor: `${patent.accent}30` }}
+              suppressHydrationWarning
             >
               {/* Background gradient */}
               <div 

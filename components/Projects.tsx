@@ -28,11 +28,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.1, duration: 0.7 }}
-      className="project-card rounded-2xl overflow-hidden border border-[#1E2A45]/80 hover:border-opacity-50 transition-all duration-300 glass"
+      className="project-card rounded-2xl overflow-hidden border border-[#1E2A45]/80 hover:border-opacity-50 transition-all duration-300 glass min-h-[500px] flex flex-col"
     >
-      <div 
-        className="p-6 pb-0 bg-opacity-10" 
+      <div
+        className="p-6 pb-0 bg-opacity-10"
         style={{ background: `linear-gradient(to bottom right, ${project.accentColor}1A, transparent)` }}
+        suppressHydrationWarning
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -80,28 +81,38 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
       </div>
 
-      <div className="p-6 pt-5 space-y-5">
-        <div>
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#475569] mb-2">Problem</div>
-          <p className="text-[14px] text-[#94A3B8] leading-relaxed">{project.problem}</p>
-        </div>
+      <div className="p-6 pt-5 flex flex-col flex-1 gap-5">
+        <div className="flex-1 space-y-5">
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-widest text-[#475569] mb-2">Problem</div>
+            <p className="text-[14px] text-[#94A3B8] leading-relaxed line-clamp-3">{project.problem}</p>
+          </div>
 
-        <div>
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#475569] mb-2">Key Impact</div>
-          <ul className="space-y-1.5">
-            {project.impact?.slice(0, 2).map((item: string, i: number) => (
-              <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: project.accentColor }} />
-                {item}
-              </li>
-            ))}
-          </ul>
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-widest text-[#475569] mb-2">Key Impact</div>
+            <ul className="space-y-1.5">
+              {project.impact?.slice(0, 2).map((item: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-[13px] text-[#94A3B8]">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: project.accentColor }} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-2 text-[12px] font-semibold transition-colors"
-          style={{ color: project.accentColor }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setExpanded(!expanded);
+            }
+          }}
+          className="flex items-center gap-2 text-[12px] font-semibold transition-colors hover:opacity-80 rounded px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
+          style={{ color: project.accentColor, outlineColor: project.accentColor }}
+          aria-expanded={expanded}
+          aria-controls={`case-study-${index}`}
         >
           {expanded ? (
             <><ChevronUp size={14} /> Less detail</>
@@ -113,6 +124,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <AnimatePresence>
           {expanded && (
             <motion.div
+              id={`case-study-${index}`}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -166,7 +178,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
     : projects.filter(p => p.category === activeCategory);
 
   return (
-    <section id="projects" className="relative py-28" ref={ref}>
+    <section id="projects" className="relative py-28" ref={ref} suppressHydrationWarning>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-gradient-radial from-[#3B82F6]/5 to-transparent blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -175,6 +187,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-10"
+          suppressHydrationWarning
         >
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#3B82F6] uppercase tracking-widest mb-4">
             <span className="w-8 h-px bg-[#3B82F6]" />
@@ -191,7 +204,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
         </motion.div>
 
         {/* Category Filters */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -212,7 +225,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
           ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 auto-rows-fr items-stretch">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, i) => (
               <motion.div
@@ -222,6 +235,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
+                className="h-full"
               >
                 <ProjectCard project={project} index={i} />
               </motion.div>

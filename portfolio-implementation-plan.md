@@ -43,24 +43,34 @@ These are blocking issues. A hiring manager who sees any of these will second-gu
 No new pages needed. Improvements to existing content.
 
 ### 1.1 Update Hero Stats
-Replace weak or outdated stats with stronger, more specific numbers.
+Replace weak or outdated stats with stronger, more specific numbers that reflect enterprise design thinking and security ownership.
 
-| Current | Replace With |
-|---|---|
-| `6+ Services Led` | `10+ Distributed Services` |
-| `Patent Inventor` (generic) | `2 IBM Patents Filed` |
+| Current | Replace With | Why |
+|---|---|---|
+| `6+ Services Led` | `10+ Distributed Services` | Emphasizes scale and complexity |
+| `Patent Inventor` (generic) | `2 IBM Patents Filed` | More credible than "inventor" alone |
+| (Add) | `Zero-Trust Architecture` | Signals security-first mindset |
+| (Add) | `Enterprise-Scale AI Systems` | Reflects production GenAI ownership |
 
 Keep: `8+ Years @ IBM`, `94% AI Accuracy`, `4× Release Cadence` — these are strong.
 
 **Stretch:** If you can calculate or estimate cost/effort savings (e.g., "$500K in manual effort automated"), add it as a sixth stat tile.
 
 ### 1.2 Punch Up the About Section
-Current About reads like a resume. Add one sentence of engineering voice/philosophy.
+Current About reads like a resume. Add sentences that reflect your core thinking patterns: Enterprise Design, Security by Default, and Architectural Thinking.
 
-**Add after the first paragraph:**
-> "I approach every system as if I'll be the one on-call at 3am when it breaks — which means I design for observability, security, and failure from day one."
+**Replace the current About section with this narrative:**
 
-This signals Staff-level thinking in one sentence. Recruiters and EMs notice.
+> At IBM, I've designed and shipped distributed systems at enterprise scale — not just code, but the architecture, security model, and operational mindset that keeps them running. I think in systems: distributed tradeoffs, failure modes, compliance constraints, and how security becomes weaker if it's bolted on later instead of baked in from the first whiteboard sketch.
+>
+> I own outcomes end-to-end — from initial architecture decisions to production deployment to compliance review. Security and privacy aren't checkboxes; they're growth constraints that shape better design. I've shipped production Generative AI systems, Zero Trust architectures, and DevSecOps pipelines that caught real threats before they became incidents.
+
+**Why this works:**
+- Signals **Enterprise Design Thinking** — "distributed systems at enterprise scale," "systems thinking"
+- Emphasizes **Security by Design** — "baked in from the first sketch," "Zero Trust," "caught real threats"
+- Shows **Architectural Thinking for Security** — "failure modes," "compliance constraints," "security becomes weaker if bolted on"
+- Demonstrates **Growth Behaviors** — "own outcomes end-to-end," "from initial design to production to review"
+- This is Staff-level narrative that hiring managers and EMs immediately recognize.
 
 ### 1.3 Add "Open to Work" Signal
 Currently buried in the Contact section. Surface it higher.

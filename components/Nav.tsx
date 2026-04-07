@@ -94,7 +94,7 @@ export default function Nav() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="/Sandeep_Reddy_Resume_2026.pdf"
+            href="/Sandeep_Reddy_Resume.pdf"
             download
             className="btn-secondary text-sm py-2 px-5"
           >
@@ -143,7 +143,7 @@ export default function Nav() {
               ))}
               <div className="pt-3 border-t border-[#1E2A45]/60 flex flex-col gap-2">
                 <a
-                  href="/Sandeep_Reddy_Resume_2026.pdf"
+                  href="/Sandeep_Reddy_Resume.pdf"
                   download
                   className="btn-secondary text-sm py-3 w-full justify-center"
                 >

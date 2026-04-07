@@ -12,7 +12,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
   const timeline = experienceData || [];
 
   return (
-    <section id="experience" className="relative py-28" ref={ref}>
+    <section id="experience" className="relative py-28" ref={ref} suppressHydrationWarning>
       <div className="absolute top-0 right-0 w-[500px] h-[600px] rounded-full bg-gradient-radial from-[#14B8A6]/5 to-transparent blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -62,6 +62,7 @@ export default function Experience({ experienceData }: { experienceData: Experie
                         borderColor: item.isCurrent ? item.accentColor : `${item.accentColor}40`,
                         boxShadow: item.isCurrent ? `0 0 20px ${item.accentColor}40` : "none",
                       }}
+                      suppressHydrationWarning
                     >
                       <Icon size={16} style={{ color: item.accentColor }} />
                     </div>
