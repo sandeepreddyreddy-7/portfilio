@@ -21,17 +21,20 @@ jest.mock('resend', () => ({
   Resend: jest.fn().mockImplementation(() => ({
     emails: {
       send: jest.fn().mockResolvedValue({
-        id: 'email_mock_id',
-        from: 'test@test.com',
-        created_at: new Date().toISOString(),
+        data: {
+          id: 'email_mock_id',
+          from: 'test@test.com',
+          created_at: new Date().toISOString(),
+        },
+        error: null,
       }),
     },
   })),
 }));
 
 import { POST } from '@/app/api/contact/route';
+import { Resend } from 'resend';
 
-// Helper to create a mock Request object compatible with Next.js API routes
 const createMockRequest = (body: unknown, ip = '127.0.0.1'): Request => {
   return {
     json: async () => body,
@@ -45,13 +48,26 @@ const createMockRequest = (body: unknown, ip = '127.0.0.1'): Request => {
 };
 
 describe('/api/contact', () => {
+  const originalEnv = process.env;
+
+  beforeAll(() => {
+    process.env = {
+      ...originalEnv,
+      RESEND_API_KEY: originalEnv.RESEND_API_KEY || 're_test_key',
+      CONTACT_FORM_RECIPIENT: originalEnv.CONTACT_FORM_RECIPIENT || 'owner@example.com',
+      CONTACT_FORM_FROM: originalEnv.CONTACT_FORM_FROM || 'noreply@example.com',
+      RATE_LIMIT_MAX: originalEnv.RATE_LIMIT_MAX || '5',
+      RATE_LIMIT_WINDOW_MS: originalEnv.RATE_LIMIT_WINDOW_MS || '60000',
+    };
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // ──────────────────────────────────────────────────────────────────────
-  // VALIDATION TESTS - The most important tests
-  // ──────────────────────────────────────────────────────────────────────
+  afterAll(() => {
+    process.env = originalEnv;
+  });
 
   describe('input validation', () => {
     it('should reject request with missing name field', async () => {
@@ -153,10 +169,6 @@ describe('/api/contact', () => {
     });
   });
 
-  // ──────────────────────────────────────────────────────────────────────
-  // SANITY CHECKS - Ensure handler exists and responds
-  // ──────────────────────────────────────────────────────────────────────
-
   describe('request handling', () => {
     it('should handle valid requests without 400 validation errors', async () => {
       const res = await POST(
@@ -170,8 +182,6 @@ describe('/api/contact', () => {
         )
       );
 
-      // Valid requests should not return 400 validation error
-      // May return 200, 429 (rate limited), 500 (service error), etc., but not 400
       expect(res.status).not.toBe(400);
     });
 
@@ -186,11 +196,60 @@ describe('/api/contact', () => {
 
       expect(res.headers.get('x-request-id')).toBeTruthy();
     });
-  });
 
-  // ──────────────────────────────────────────────────────────────────────
-  // RATE LIMITING - Verify configuration exists
-  // ──────────────────────────────────────────────────────────────────────
+    it('should retry with the default sender when the custom sender is rejected', async () => {
+      const sendMock = jest
+        .fn()
+        .mockResolvedValueOnce({
+          data: null,
+          error: { message: 'You must verify your domain before using this from address', code: 'validation_error' },
+        })
+        .mockResolvedValueOnce({
+          data: { id: 'email_retry_id' },
+          error: null,
+        });
+
+      (Resend as jest.Mock).mockImplementationOnce(() => ({
+        emails: {
+          send: sendMock,
+        },
+      }));
+
+      const res = await POST(
+        createMockRequest({
+          name: 'Retry Case',
+          email: 'retry@example.com',
+          message: 'This message should succeed after retrying the sender address.',
+        })
+      );
+
+      expect(res.status).toBe(200);
+      expect(sendMock).toHaveBeenCalledTimes(2);
+      expect(sendMock.mock.calls[1]?.[0]).toMatchObject({
+        from: 'Portfolio Contact <onboarding@resend.dev>',
+      });
+    });
+
+    it('should return 503 when email configuration is missing', async () => {
+      const previousApiKey = process.env.RESEND_API_KEY;
+      delete process.env.RESEND_API_KEY;
+
+      const res = await POST(
+        createMockRequest({
+          name: 'Jane Smith',
+          email: 'jane@example.com',
+          message: 'Another valid message for testing purposes here',
+        })
+      );
+
+      expect(res.status).toBe(503);
+      await expect(res.json()).resolves.toEqual({
+        error: 'Contact form is temporarily unavailable. Please try again later.',
+      });
+
+      process.env.RESEND_API_KEY = previousApiKey;
+    });
+  });
 
   describe('rate limiting configuration', () => {
     it('should have rate limiting environment variables configured', () => {

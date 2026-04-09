@@ -4,42 +4,94 @@ import { Resend } from 'resend';
 import { VALIDATION, EMAIL_RE } from '@/lib/validation';
 import { logger, setRequestId } from '@/lib/logger';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STARTUP VALIDATION — Fail fast if critical env vars are missing
-// ─────────────────────────────────────────────────────────────────────────────
-
-if (!process.env.RESEND_API_KEY) {
-  throw new Error(
-    'RESEND_API_KEY is required. Add it to .env.local to enable contact form emails.'
-  );
-}
-
-if (!process.env.CONTACT_FORM_RECIPIENT) {
-  throw new Error(
-    'CONTACT_FORM_RECIPIENT is required. Add it to .env.local.'
-  );
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const CONTACT_RECIPIENT = process.env.CONTACT_FORM_RECIPIENT;
-const CONTACT_FROM = process.env.CONTACT_FORM_FROM || 'noreply@sandeepreddy.dev';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// RATE LIMITING (Vercel KV for production; in-memory fallback for dev)
-// ─────────────────────────────────────────────────────────────────────────────
-
+const DEFAULT_CONTACT_FROM = 'onboarding@resend.dev';
 const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '5');
 const RATE_LIMIT_WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000');
-const EMAIL_RATE_LIMIT_MAX = 2; // 2 emails per hour per email address
-const EMAIL_RATE_LIMIT_WINDOW_MS = 3_600_000; // 1 hour
+const EMAIL_RATE_LIMIT_MAX = 2;
+const EMAIL_RATE_LIMIT_WINDOW_MS = 3_600_000;
 
-// Fallback in-memory rate limiting for development
 const devIpRateLimitMap = new Map<string, { count: number; windowStart: number }>();
 const devEmailRateLimitMap = new Map<string, { count: number; windowStart: number }>();
 
+function getMailConfig() {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const recipient = process.env.CONTACT_FORM_RECIPIENT?.trim();
+  const from = process.env.CONTACT_FORM_FROM?.trim() || DEFAULT_CONTACT_FROM;
+  const missing: string[] = [];
+
+  if (!apiKey) {
+    missing.push('RESEND_API_KEY');
+  }
+
+  if (!recipient) {
+    missing.push('CONTACT_FORM_RECIPIENT');
+  }
+
+  return {
+    apiKey,
+    recipient,
+    from,
+    missing,
+    isConfigured: missing.length === 0,
+  };
+}
+
+function shouldRetryWithDefaultSender(error: { message: string } | null, from: string) {
+  if (!error || from === DEFAULT_CONTACT_FROM) {
+    return false;
+  }
+
+  return /(from|sender|domain|verify|verified)/i.test(error.message);
+}
+
+async function sendContactEmail({
+  resend,
+  from,
+  recipient,
+  name,
+  email,
+  message,
+}: {
+  resend: Resend;
+  from: string;
+  recipient: string;
+  name: string;
+  email: string;
+  message: string;
+}) {
+  const firstAttempt = await resend.emails.send({
+    from: `Portfolio Contact <${from}>`,
+    to: recipient,
+    subject: `New Portfolio Message from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    replyTo: email,
+  });
+
+  if (!shouldRetryWithDefaultSender(firstAttempt.error ?? null, from)) {
+    return {
+      ...firstAttempt,
+      effectiveFrom: from,
+      usedFallbackFrom: false,
+    };
+  }
+
+  const retryAttempt = await resend.emails.send({
+    from: `Portfolio Contact <${DEFAULT_CONTACT_FROM}>`,
+    to: recipient,
+    subject: `New Portfolio Message from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    replyTo: email,
+  });
+
+  return {
+    ...retryAttempt,
+    effectiveFrom: DEFAULT_CONTACT_FROM,
+    usedFallbackFrom: !retryAttempt.error,
+    initialError: firstAttempt.error,
+  };
+}
+
 async function isRateLimited(ip: string, email: string, requestId: string): Promise<boolean> {
-  // In production, use Vercel KV. For now, use in-memory (dev only)
-  // TODO: Migrate to @vercel/kv in production
   if (process.env.NODE_ENV === 'production' && !process.env.KV_URL) {
     logger.warn('Rate limiting not configured for production. Install @vercel/kv and set KV_URL', {
       requestId,
@@ -49,7 +101,6 @@ async function isRateLimited(ip: string, email: string, requestId: string): Prom
 
   const now = Date.now();
 
-  // Check IP-based rate limit
   {
     const key = `ip:${ip}`;
     const entry = devIpRateLimitMap.get(key);
@@ -64,7 +115,6 @@ async function isRateLimited(ip: string, email: string, requestId: string): Prom
     }
   }
 
-  // Check email-based rate limit
   {
     const key = `email:${email}`;
     const entry = devEmailRateLimitMap.get(key);
@@ -82,10 +132,6 @@ async function isRateLimited(ip: string, email: string, requestId: string): Prom
   return false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// REQUEST HANDLER
-// ─────────────────────────────────────────────────────────────────────────────
-
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
   const requestId = req.headers.get('x-request-id') || crypto.randomUUID();
@@ -97,38 +143,74 @@ export async function POST(req: NextRequest) {
     'unknown';
 
   try {
+    const mailConfig = getMailConfig();
+
+    if (!mailConfig.isConfigured) {
+      logger.error(
+        'Contact form email configuration is incomplete',
+        new Error(`Missing required environment variables: ${mailConfig.missing.join(', ')}`),
+        { requestId, ip, missingEnvVars: mailConfig.missing }
+      );
+
+      return logAndRespond(
+        ip,
+        503,
+        'Contact form is temporarily unavailable. Please try again later.',
+        startTime,
+        requestId
+      );
+    }
+
     const { name, email, message } = await req.json();
 
-    // Validate required fields
     if (!name || !email || !message) {
       return logAndRespond(ip, 400, 'Missing required fields', startTime, requestId);
     }
 
-    // Validate field types and lengths
-    if (typeof name !== 'string' || name.length < VALIDATION.name.min || name.length > VALIDATION.name.max) {
-      return logAndRespond(ip, 400, `Name must be ${VALIDATION.name.min}-${VALIDATION.name.max} characters`, startTime, requestId);
+    if (
+      typeof name !== 'string' ||
+      name.length < VALIDATION.name.min ||
+      name.length > VALIDATION.name.max
+    ) {
+      return logAndRespond(
+        ip,
+        400,
+        `Name must be ${VALIDATION.name.min}-${VALIDATION.name.max} characters`,
+        startTime,
+        requestId
+      );
     }
 
     if (typeof email !== 'string' || email.length > VALIDATION.email.max || !EMAIL_RE.test(email)) {
       return logAndRespond(ip, 400, 'Invalid email address', startTime, requestId);
     }
 
-    if (typeof message !== 'string' || message.length < VALIDATION.message.min || message.length > VALIDATION.message.max) {
-      return logAndRespond(ip, 400, `Message must be ${VALIDATION.message.min}-${VALIDATION.message.max} characters`, startTime, requestId);
+    if (
+      typeof message !== 'string' ||
+      message.length < VALIDATION.message.min ||
+      message.length > VALIDATION.message.max
+    ) {
+      return logAndRespond(
+        ip,
+        400,
+        `Message must be ${VALIDATION.message.min}-${VALIDATION.message.max} characters`,
+        startTime,
+        requestId
+      );
     }
 
-    // Check rate limits (IP + email)
     if (await isRateLimited(ip, email, requestId)) {
       return logAndRespond(ip, 429, 'Too many requests. Please try again later', startTime, requestId);
     }
 
-    // Send email
-    const { data, error } = await resend.emails.send({
-      from: `Portfolio Contact <${CONTACT_FROM}>`,
-      to: CONTACT_RECIPIENT,
-      subject: `New Portfolio Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      replyTo: email,
+    const resend = new Resend(mailConfig.apiKey);
+    const { data, error, effectiveFrom, usedFallbackFrom, initialError } = await sendContactEmail({
+      resend,
+      from: mailConfig.from,
+      recipient: mailConfig.recipient,
+      name,
+      email,
+      message,
     });
 
     if (error) {
@@ -138,12 +220,22 @@ export async function POST(req: NextRequest) {
         email,
         ip,
         resendErrorCode: errorCode,
+        resendFromAddress: effectiveFrom,
+        resendFallbackAttempted: Boolean(initialError),
+        resendInitialErrorMessage: initialError?.message,
       });
 
       Sentry.captureException(error, {
         level: 'error',
         contexts: {
-          contact_form: { email, ip, requestId },
+          contact_form: {
+            email,
+            ip,
+            requestId,
+            from: effectiveFrom,
+            fallbackAttempted: Boolean(initialError),
+            initialErrorMessage: initialError?.message,
+          },
         },
       });
       return logAndRespond(ip, 500, 'Failed to send message. Please try again', startTime, requestId);
@@ -154,6 +246,8 @@ export async function POST(req: NextRequest) {
       email,
       ip,
       resendId: data?.id,
+      resendFromAddress: effectiveFrom,
+      resendFallbackUsed: usedFallbackFrom,
     });
 
     const response = NextResponse.json({ success: true, data }, { status: 200 });
@@ -174,9 +268,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/**
- * Log and return JSON response
- */
 function logAndRespond(
   ip: string,
   status: number,
@@ -186,7 +277,7 @@ function logAndRespond(
 ): NextResponse {
   const duration = Date.now() - startTime;
   setRequestId(requestId);
-  logger.info(`Contact API request`, {
+  logger.info('Contact API request', {
     ip,
     status,
     duration,

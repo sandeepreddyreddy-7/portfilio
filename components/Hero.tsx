@@ -189,7 +189,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
+    <section className="relative flex min-h-screen items-start overflow-hidden pt-20 pb-12 md:items-center md:pb-0">
       {/* 3-D canvas — mouse parallax passes through */}
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" aria-hidden="true" suppressHydrationWarning />
 
@@ -201,9 +201,9 @@ export default function Hero() {
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full bg-gradient-radial from-[#8B5CF6]/10 to-transparent blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left: Text */}
-          <div className="flex flex-col pt-16">
+          <div className="flex flex-col pt-8 md:pt-16">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -387,7 +387,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
         onClick={scrollToAbout}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#475569] hover:text-[#94A3B8] transition-colors"
+        className="absolute bottom-10 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[#475569] transition-colors hover:text-[#94A3B8] md:flex"
       >
         <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
         <motion.div
