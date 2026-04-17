@@ -228,7 +228,7 @@ export default function Projects({ projectsData }: { projectsData: Project[] }) 
             <span className="gradient-text">Built & Owned</span>
           </h2>
           <p className="mt-4 text-[16px] text-[#64748B] max-w-2xl mx-auto">
-            Not just features — end-to-end platforms designed for scale, adopted by real teams, and running in production at IBM.
+            Not just features - end-to-end platforms designed for scale, adopted by real teams, and running in production at IBM.
           </p>
         </motion.div>
 

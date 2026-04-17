@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sandeepreddy.dev"),
-  title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
+  title: "Sandeep Reddy - Senior Software Engineer | AI, Security & Cloud",
   description:
     "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
   keywords: [
@@ -20,10 +20,20 @@ export const metadata: Metadata = {
     "Docker",
     "OpenShift",
     "DevOps",
+    "Generative AI",
+    "Security Engineering",
+    "Cloud Architecture",
+    "DevSecOps",
+    "IBM OpenShift",
+    "Security Engineering",
+    "Python",
+    "Flask",
+    "FastAPI",
+    "AI", "ML", "LLM", "RAG", "LangChain", "watsonx"
   ],
   authors: [{ name: "Sandeep Reddy" }],
   openGraph: {
-    title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
+    title: "Sandeep Reddy - Senior Software Engineer | AI, Security & Cloud",
     description:
       "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
     type: "website",
@@ -40,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sandeep Reddy — Senior Software Engineer | AI, Security & Cloud",
+    title: "Sandeep Reddy - Senior Software Engineer | AI, Security & Cloud",
     description:
       "Senior Software Engineer with 8+ years at IBM. Named inventor on 2 IBM patents. Production GenAI systems, enterprise security platforms, and DevSecOps pipelines.",
     images: ["/opengraph-image"],

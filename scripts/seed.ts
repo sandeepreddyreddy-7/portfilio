@@ -126,16 +126,16 @@ const experiences = [
     _type: 'experience',
     role: 'Senior Software Engineer',
     company: 'IBM · TPSRM',
-    period: 'May 2021 — Present',
+    period: 'May 2021 - Present',
     type: 'work',
     isCurrent: true,
     location: 'Durham, NC',
     highlights: [
-      "Engineered production GenAI conversational assistant (watsonx Assistant + FastAPI) on Slack and web — reduced vendor risk response time from hours to under 10 seconds across IBM's global workforce",
-      "Architected fully autonomous multi-agent AI system (watsonx Orchestrate) — achieved 100% end-to-end automation and eliminated manual supplier engagement, compressing assessment cycle time by 7+ days",
-      "Designed dual-LLM validation engine (watsonx.ai + LLaMA 3-70B) — 77% quality improvement, 70% review effort reduction, 94% AI accuracy across thousands of assessments",
-      "Engineered DevSecOps CI/CD pipeline (Jenkins, GitHub Actions) with SAST, SBOM scanning, and secrets detection — increased release cadence 4× (monthly → weekly)",
-      "Technical lead across 6+ distributed TPSRM services — owned system design, led code/design reviews, mentored junior engineers, partnered with Security, Product, Legal, and Compliance",
+      "Engineered production GenAI conversational assistant (watsonx Assistant + FastAPI) on Slack and web reduced vendor risk response time from hours to under 10 seconds across IBM's global workforce",
+      "Architected fully autonomous multi-agent AI system (watsonx Orchestrate) achieved 100% end-to-end automation and eliminated manual supplier engagement, compressing assessment cycle time by 7+ days",
+      "Designed dual-LLM validation engine (watsonx.ai + LLaMA 3-70B) 77% quality improvement, 70% review effort reduction, 94% AI accuracy across thousands of assessments",
+      "Engineered DevSecOps CI/CD pipeline (Jenkins, GitHub Actions) with SAST, SBOM scanning, and secrets detection increased release cadence 4x (monthly to weekly)",
+      "Technical lead across 6+ distributed TPSRM services owned system design, led code/design reviews, mentored junior engineers, partnered with Security, Product, Legal, and Compliance",
       "2× Patent Inventor: Anomaly Detection in Assessment Data (App. 19/008667) and Multi-Model LLM Questionnaire Verification (P202501766)",
     ],
     tags: ["watsonx", "Java", "Python", "FastAPI", "Spring Boot", "OpenShift", "Slack API", "CI/CD"],
@@ -146,14 +146,14 @@ const experiences = [
     _type: 'experience',
     role: 'Software Engineer',
     company: 'IBM via Inteliroute Technologies LLC',
-    period: 'Apr 2018 — May 2021',
+    period: 'Apr 2018 - May 2021',
     type: 'work',
     isCurrent: false,
     location: 'Durham, NC',
     highlights: [
-      "Built and maintained Agile Risk Management (ARM) platform — full-stack features with Java Spring Boot, Angular, REST APIs, end-to-end ownership across multiple release cycles",
+      "Built and maintained Agile Risk Management (ARM) platform - full-stack features with Java Spring Boot, Angular, REST APIs, end-to-end ownership across multiple release cycles",
       "Contributed foundational buildout of ProcessUnity GRC workflows, SSO/SAML integrations, and microservice vendor assessment pipelines that scaled into the enterprise TPSRM platform",
-      "Designed SSO/SAML federated identity (IBM Liberty + ProcessUnity SaaS) and SendGrid email infrastructure — establishing secure identity and notification foundation for the TPRM program",
+      "Designed SSO/SAML federated identity (IBM Liberty + ProcessUnity SaaS) and SendGrid email infrastructure establishing secure identity and notification foundation for the TPRM program",
       "Containerized microservices with Docker on IBM Hybrid Cloud (OpenShift), configured NGINX for load balancing, built Jenkins CI/CD pipelines",
       "Developed reusable Angular component libraries; Python (Pandas, BeautifulSoup) for backend data processing and automated vendor data enrichment",
     ],
@@ -168,7 +168,7 @@ const experiences = [
     period: 'Dec 2017',
     type: 'education',
     isCurrent: false,
-    location: 'College Station, TX',
+    location: 'Texas',
     highlights: [
       "Graduate-level coursework in distributed systems, algorithms, and software engineering",
       "Foundation for advanced system design and architectural thinking",
@@ -214,7 +214,7 @@ const patents = [
     status: 'Review Completed',
     date: 'May 2025',
     entity: 'IBM',
-    desc: 'Covers multi-model LLM-based automated verification of supplier risk questionnaire submissions — directly tied to the production dual-LLM validation engine built for the TPSRM platform.',
+    desc: 'Covers multi-model LLM-based automated verification of supplier risk questionnaire submissions directly tied to the production dual-LLM validation engine built for the TPSRM platform.',
     tech: ["watsonx.ai", "LLaMA 3-70B", "FastAPI", "ProcessUnity"],
     accent: '#06B6D4',
     order: 2,
@@ -299,25 +299,25 @@ const aboutDoc = {
   valueCards: [
     {
       title: "Systems Thinking",
-      desc: "Designed 6+ distributed TPSRM services at IBM — owned architecture decisions end-to-end across security, cloud, GRC, and AI layers.",
+      desc: "Designed 10+ distributed TPSRM services at IBM, owned architecture decisions end-to-end across security, cloud, GRC, and AI layers.",
       color: "text-[#3B82F6]",
       iconName: 'Layers',
     },
     {
       title: "Ownership Mindset",
-      desc: "From initial system design to production deployment to compliance review — I own outcomes, not just tickets.",
+      desc: "From initial system design to production deployment to compliance review - I own outcomes, not just tickets.",
       color: "text-[#8B5CF6]",
       iconName: 'Zap',
     },
     {
       title: "Secure by Default",
-      desc: "OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Gitleaks secrets detection, Zero Trust IAM — security is not a phase, it's the default.",
+      desc: "OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Gitleaks secrets detection, Zero Trust IAM - security is not a phase, it's the default.",
       color: "text-[#14B8A6]",
       iconName: 'Shield',
     },
     {
       title: "AI-Native Builder",
-      desc: "Shipped production Generative AI systems: multi-agent frameworks, RAG pipelines, conversational assistants, and LLM validation engines — at enterprise scale, not just prototypes.",
+      desc: "Shipped production Generative AI systems: multi-agent frameworks, RAG pipelines, conversational assistants, and LLM validation engines at enterprise scale, not just prototypes.",
       color: "text-[#06B6D4]",
       iconName: 'Bot',
     }
@@ -326,14 +326,14 @@ const aboutDoc = {
 
 async function seed() {
   console.log('🌱 Starting database seed...');
-  
+
   try {
     // We execute concurrently, logging each category
     const projectPromises = projects.map(p => client.create(p));
     const expPromises = experiences.map(e => client.create(e));
     const patentPromises = patents.map(p => client.create(p));
     const skillPromises = skills.map(s => client.create(s));
-    
+
     // We insert the About singleton directly overwriting if exists
     await client.createOrReplace(aboutDoc);
     console.log('✅ About data migrated.');

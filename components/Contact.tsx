@@ -155,7 +155,7 @@ export default function Contact() {
             <span className="gradient-text">Something Great</span>
           </h2>
           <p className="mt-4 text-[16px] text-[#64748B] max-w-xl mx-auto">
-            Open to senior engineering roles, technical leadership, and high-impact opportunities. Based in Durham, NC — open to remote.
+            Open to senior engineering roles, technical leadership, and high-impact opportunities.
           </p>
         </motion.div>
 
@@ -260,11 +260,10 @@ export default function Contact() {
                       aria-required="true"
                       aria-invalid={!!fieldErrors.name}
                       aria-describedby={fieldErrors.name ? "name-error" : undefined}
-                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${
-                        fieldErrors.name
+                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${fieldErrors.name
                           ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                           : "border-[#1E2A45] focus:border-[#3B82F6]"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.name && (
                       <p id="name-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.name}</p>
@@ -284,11 +283,10 @@ export default function Contact() {
                       aria-required="true"
                       aria-invalid={!!fieldErrors.email}
                       aria-describedby={fieldErrors.email ? "email-error" : undefined}
-                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${
-                        fieldErrors.email
+                      className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors ${fieldErrors.email
                           ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                           : "border-[#1E2A45] focus:border-[#3B82F6]"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.email && (
                       <p id="email-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.email}</p>
@@ -316,11 +314,10 @@ export default function Contact() {
                     maxLength={VALIDATION.message.max}
                     aria-invalid={!!fieldErrors.message}
                     aria-describedby={fieldErrors.message ? "message-error" : undefined}
-                    className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors resize-none ${
-                      fieldErrors.message
+                    className={`w-full bg-[#0B0F19]/60 border rounded-xl px-4 py-3 text-[14px] text-[#F1F5F9] placeholder-[#475569] focus:outline-none transition-colors resize-none ${fieldErrors.message
                         ? "border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                         : "border-[#1E2A45] focus:border-[#3B82F6]"
-                    }`}
+                      }`}
                   />
                   {fieldErrors.message && (
                     <p id="message-error" className="text-[11px] text-red-400 mt-1.5 font-medium">{fieldErrors.message}</p>

@@ -204,14 +204,16 @@ export async function POST(req: NextRequest) {
     }
 
     const resend = new Resend(mailConfig.apiKey);
-    const { data, error, effectiveFrom, usedFallbackFrom, initialError } = await sendContactEmail({
+    const result = await sendContactEmail({
       resend,
       from: mailConfig.from,
-      recipient: mailConfig.recipient,
+      recipient: mailConfig.recipient!,
       name,
       email,
       message,
     });
+    const { data, error, effectiveFrom, usedFallbackFrom } = result;
+    const initialError = 'initialError' in result ? result.initialError : undefined;
 
     if (error) {
       const errorCode = error && typeof error === 'object' && 'code' in error ? error.code : 'unknown';

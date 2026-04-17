@@ -10,9 +10,9 @@ export default function About({ aboutData }: { aboutData: AboutData | null }) {
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
   const paragraphs = [
-    "I'm a Senior Software Engineer and 2× Patent Inventor with 8+ years building production-grade systems at IBM — specializing in Generative AI, distributed platforms, and enterprise security automation. I've shipped high-impact systems end-to-end from architecture through production, at enterprise scale.",
-    "At IBM's Third-Party Security Risk Management organization, I've architected multi-agent LLM frameworks using watsonx Orchestrate and watsonx.ai, built conversational AI assistants deployed on Slack and web, designed dual-LLM validation engines achieving 94% AI accuracy, and engineered DevSecOps pipelines that increased release cadence 4× while reducing deployment time from hours to minutes. My work spans the full stack — from React and Next.js frontends to Spring Boot microservices, IBM Cloud infrastructure, and GRC platform administration.",
-    "I'm actively exploring Senior Software Engineer, Staff Engineer, Solutions Architect, and Technical Lead roles — particularly in cloud, security, and AI-native organizations where I can bring this same depth of engineering and platform thinking to the next team.",
+    "I'm a Senior Software Engineer and 2× Patent Inventor with 8+ years building production-grade systems at IBM - specializing in Generative AI, distributed platforms, and enterprise security automation. I've shipped high-impact systems end-to-end from architecture through production, at enterprise scale.",
+    "At IBM's Third-Party Security Risk Management organization, I've architected multi-agent LLM frameworks using watsonx Orchestrate and watsonx.ai, built conversational AI assistants deployed on Slack and web, designed dual-LLM validation engines achieving 94% AI accuracy, and engineered DevSecOps pipelines that increased release cadence 4× while reducing deployment time from hours to minutes. My work spans the full stack - from React and Next.js frontends to Spring Boot microservices, IBM Cloud infrastructure, and GRC platform administration.",
+    "I'm actively exploring Senior Software Engineer, Staff Engineer, Solutions Architect, and Technical Lead roles - particularly in cloud, security, and AI-native organizations where I can bring this same depth of engineering and platform thinking to the next team.",
   ];
   const valueCards = aboutData?.valueCards || [];
 
