@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, ChevronDown, ChevronUp, Zap, Shield, Bot, Folder } from "lucide-react";
+import Image from "next/image";
 import type { Project } from "@/lib/sanity-types";
 
 // Mapping Sanity category strings back to their semantic UI icons
@@ -39,11 +40,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     // Use logo if logoKind is set to 'logo' and logoUrl exists
     if (project.logoKind === 'logo' && project.logoUrl) {
       return (
-        <img
-          src={project.logoUrl}
-          alt={`${project.title} logo`}
-          className="w-full h-full object-contain p-0.5"
-        />
+        <span className="relative w-full h-full block">
+          <Image
+            src={project.logoUrl}
+            alt={`${project.title} logo`}
+            fill
+            unoptimized
+            className="object-contain p-0.5"
+          />
+        </span>
       );
     }
 
