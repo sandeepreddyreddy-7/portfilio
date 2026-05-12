@@ -16,7 +16,7 @@ const valueCards = [
   },
   {
     title: 'Secure by Design',
-    desc: 'OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Secrets detection, Zero Trust IAM security is not a phase, it\'s woven into every architectural decision from the first sketch.',
+    desc: 'OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Secrets detection, Zero Trust IAM, Security is not a phase, it\'s woven into every architectural decision from the first sketch.',
     iconName: 'Shield',
     color: 'text-red-400',
   },

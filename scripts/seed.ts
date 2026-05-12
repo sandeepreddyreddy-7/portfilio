@@ -214,7 +214,7 @@ const patents = [
     status: 'Review Completed',
     date: 'May 2025',
     entity: 'IBM',
-    desc: 'Covers multi-model LLM-based automated verification of supplier risk questionnaire submissions — directly tied to the production dual-LLM validation engine built for the TPSRM platform.',
+    desc: 'Covers multi-model LLM-based automated verification of supplier risk questionnaire submissions directly tied to the production dual-LLM validation engine built for the TPSRM platform.',
     tech: ["watsonx.ai", "LLaMA 3-70B", "FastAPI", "ProcessUnity"],
     accent: '#06B6D4',
     order: 2,
@@ -311,7 +311,7 @@ const aboutDoc = {
     },
     {
       title: "Secure by Default",
-      desc: "OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Secrets detection, Zero Trust IAM security is not a phase, it's woven into every architectural decision from the first sketch.",
+      desc: "OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Secrets detection, Zero Trust IAM, Security is not a phase, it's woven into every architectural decision from the first sketch.",
       color: "text-[#14B8A6]",
       iconName: 'Shield',
     },
