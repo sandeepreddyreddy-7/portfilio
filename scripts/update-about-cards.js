@@ -10,31 +10,31 @@ const apiVersion = '2024-03-31'
 const valueCards = [
   {
     title: 'Systems Thinking',
-    desc: 'Designed 10+ distributed TPSRM services at IBM — owned architecture decisions end-to-end across security, cloud, GRC, and AI layers.',
+    desc: 'Designed 10+ distributed TPSRM services at IBM, Owned architecture decisions end-to-end across security, cloud, GRC, and AI layers.',
     iconName: 'Layers',
     color: 'text-blue-400',
   },
   {
     title: 'Secure by Design',
-    desc: 'OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Gitleaks secrets detection, Zero Trust IAM — security is not a phase, it\'s woven into every architectural decision from the first sketch.',
+    desc: 'OWASP Top 10 enforcement, SAST/DAST pipelines, SBOM scanning, Secrets detection, Zero Trust IAM security is not a phase, it\'s woven into every architectural decision from the first sketch.',
     iconName: 'Shield',
     color: 'text-red-400',
   },
   {
     title: 'AI-Native Builder',
-    desc: 'Shipped production Generative AI systems: multi-agent frameworks, RAG pipelines, conversational assistants, and LLM validation engines — at enterprise scale, not just prototypes.',
+    desc: 'Shipped production Generative AI systems: multi-agent frameworks, RAG pipelines, conversational assistants, and LLM validation engines at enterprise scale, not just prototypes.',
     iconName: 'Zap',
     color: 'text-yellow-400',
   },
   {
     title: 'Ownership Mindset',
-    desc: 'From initial system design to production deployment to compliance review — I own outcomes, not just tickets.',
+    desc: 'From initial system design to production deployment to compliance review, I own outcomes, not just tickets.',
     iconName: 'Target',
     color: 'text-purple-400',
   },
   {
     title: 'Enterprise Design Thinking',
-    desc: 'Balance scalability, compliance, and security across distributed systems. Every decision accounts for regulatory constraints, operational excellence, and team velocity — designed for Fortune 500 scale.',
+    desc: 'Balance scalability, compliance, and security across distributed systems. Every decision accounts for regulatory constraints, operational excellence, and team velocity. Designed for Fortune 500 scale.',
     iconName: 'Building2',
     color: 'text-cyan-400',
   },

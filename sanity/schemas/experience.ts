@@ -19,7 +19,7 @@ export const experience = defineType({
     }),
     defineField({
       name: 'period',
-      title: 'Time Period (e.g., May 2021 — Present)',
+      title: 'Time Period (e.g., May 2021 - Present)',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
